@@ -31,7 +31,7 @@ export const matchRoutes = (args: {
           updatedRoutes[routeId] = {
             ...route,
             matches: true,
-            params,
+            params: params ?? undefined,
             query,
             location,
           }

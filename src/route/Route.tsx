@@ -2,6 +2,7 @@ import React, {
   ComponentType,
   isValidElement,
   ReactChild,
+  ReactElement,
   ReactNode,
   useEffect,
   useState,
@@ -29,13 +30,14 @@ import { RouteContext } from "./RouteContext"
 import { RouteLifeCycleContext } from "./RouteLifeCycleContext"
 import { RouteHandle, RouteLoader, RouteRenderer, RouteStatus } from "./types"
 import { useRouter } from "../router"
+import { useValue } from "@corets/use-value"
 
 export type RouteProps = {
   path?: string
   exact?: boolean
   render?: RouteRenderer
   load?: RouteLoader
-  children?: ReactChild | ComponentType
+  children?: ReactElement | ComponentType
   wait?: number
   loadable?: boolean
   unloadable?: boolean
@@ -89,8 +91,8 @@ export const Route = (props: RouteProps) => {
   }
 
   const [Component, setComponent] = useState<ComponentType | null>(null)
-  const [checkLoaders, setCheckLoaders] = useState(false)
-  const [checkUnloaders, setCheckUnloaders] = useState(false)
+  const checkLoaders = useValue(false)
+  const checkUnloaders = useValue(false)
 
   useAsync(async () => {
     if (route.status === RouteStatus.Initialize) {
@@ -118,10 +120,12 @@ export const Route = (props: RouteProps) => {
       router.debug && logRouteIsWaitingForLoadersToRegister(route.path, wait)
 
       // give loaders some time to register
-      await createTimeout(wait)
+      if (wait > 0) {
+        await createTimeout(wait)
+      }
 
       // enable monitoring of the life cycle loaders
-      setCheckLoaders(true)
+      checkLoaders.set(true)
 
       return
     }
@@ -132,10 +136,12 @@ export const Route = (props: RouteProps) => {
       router.debug && logRouteIsWaitingForUnloadersToRegister(route.path, wait)
 
       // give unloaders some time to register
-      await createTimeout(wait)
+      if (wait > 0) {
+        await createTimeout(wait)
+      }
 
       // enable monitoring of the life cycle unloaders
-      setCheckUnloaders(true)
+      checkUnloaders.set(true)
 
       return
     }
@@ -150,8 +156,8 @@ export const Route = (props: RouteProps) => {
     }
 
     if (route.status === RouteStatus.Idle) {
-      setCheckLoaders(false)
-      setCheckUnloaders(false)
+      checkLoaders.set(false)
+      checkUnloaders.set(false)
       lifeCycle.clearLoaders()
       lifeCycle.clearUnloaders()
 
@@ -160,7 +166,7 @@ export const Route = (props: RouteProps) => {
   }, [route.status])
 
   useEffect(() => {
-    if (!checkLoaders) return
+    if (!checkLoaders.get()) return
 
     if (lifeCycle.isLoading()) {
       debug &&
@@ -175,10 +181,10 @@ export const Route = (props: RouteProps) => {
       reportStatus(RouteStatus.Loaded)
       debug && logRouteHasChangedStatus(route.path, RouteStatus.Loaded)
     }
-  }, [checkLoaders, lifeCycle.isLoading()])
+  }, [checkLoaders.get(), lifeCycle.isLoading()])
 
   useEffect(() => {
-    if (!checkUnloaders) return
+    if (!checkUnloaders.get()) return
 
     if (lifeCycle.isUnloading()) {
       debug &&
@@ -193,7 +199,7 @@ export const Route = (props: RouteProps) => {
       reportStatus(RouteStatus.Unloaded)
       debug && logRouteHasChangedStatus(route.path, RouteStatus.Unloaded)
     }
-  }, [checkUnloaders, lifeCycle.isUnloading()])
+  }, [checkUnloaders.get(), lifeCycle.isUnloading()])
 
   if (!Component) {
     return null
