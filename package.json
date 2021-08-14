@@ -1,0 +1,66 @@
+{
+  "name": "@corets/router",
+  "description": "Next generation router for React",
+  "version": "0.0.0",
+  "author": "Maxim Kott",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "require": "./dist/index.js",
+    "import": "./dist/esm/index.js"
+  },
+  "keywords": [
+    "corets"
+  ],
+  "files": [
+    "/dist"
+  ],
+  "repository": "github:corets/router",
+  "homepage": "https://docs.corets.io/components/router",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "test": "jest",
+    "coverage": "jest --coverage && echo '\nOpen \"coverage/lcov-report/index.html\" in your browser\n'",
+    "lint": "tsc --noEmit",
+    "format": "prettier --write .",
+    "build": "tsc --noEmit && tsup src/old/index.ts --clean --dts --sourcemap --format esm,cjs --legacy-output",
+    "release": "np --no-release-draft",
+    "preview": "np --no-release-draft --tag dev",
+    "version": "yarn run build"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0 || ^17.0.0",
+    "react-dom": "^16.0.0 || ^17.0.0"
+  },
+  "dependencies": {
+    "@corets/promise-helpers": "^0.2.2",
+    "@corets/use-async": "^0.2.0",
+    "@corets/use-value": "^0.1.2",
+    "@corets/value": "^0.2.2",
+    "history": "^5.0.0",
+    "lodash": "^4.17.21",
+    "query-string": "^7.0.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@types/jest": "^26.0.24",
+    "@types/lodash": "^4.14.172",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "jest": "^27.0.6",
+    "np": "^7.2.0",
+    "parcel": "^2.0.0-rc.0",
+    "prettier": "2.2.1",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "ts-jest": "^27.0.3",
+    "tsup": "^4.12.5",
+    "typescript": "^4.3.5"
+  }
+}
