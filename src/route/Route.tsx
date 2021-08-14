@@ -218,8 +218,6 @@ export const Route = (props: RouteProps) => {
     ].includes(route.status as any) &&
     !lifeCycle.isLoading()
 
-  // todo: remove hidden stuff?
-
   return (
     <RouteContext.Provider value={routeHandle}>
       {renderRoute ? (

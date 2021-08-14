@@ -5,6 +5,8 @@ import { CreatePathMatcher, PathMatcher } from "./types"
 import { pathToRegex, PathToRegexResult } from "./helpers/pathToRegex"
 import { createPathWithBase } from "./createPathWithBase"
 
+const REST_PARAMETER_NAME = "rest_parameter_name"
+
 export const createPathMatcher: CreatePathMatcher = (): PathMatcher => {
   const cache: Record<string, PathToRegexResult> = {}
 
@@ -13,23 +15,28 @@ export const createPathMatcher: CreatePathMatcher = (): PathMatcher => {
     const exact = options?.exact ?? false
 
     const greedyPattern =
-      exact === true ? pattern : `${pattern === "/" ? "" : pattern}/:rest*`
+      exact === true
+        ? pattern
+        : `${pattern === "/" ? "" : pattern}/:${REST_PARAMETER_NAME}*`
     const finalPattern = createPathWithBase(greedyPattern, base)
+    const cacheKey = `${finalPattern}/${exact ? 1 : 0}`
 
-    if (!cache[finalPattern]) {
-      cache[finalPattern] = pathToRegex(finalPattern)
+    if (!cache[cacheKey]) {
+      cache[cacheKey] = pathToRegex(finalPattern)
     }
 
-    const { regexp, keys } = cache[finalPattern]
+    const { regexp, keys } = cache[cacheKey]
     const regexResult = regexp.exec(path)
 
-    if (!regexResult) return [false, undefined]
+    if (!regexResult) return [false, null]
 
     // formats an object with matched params
     const params = keys.reduce((params, key, i) => {
-      params[key.name] = regexResult[i + 1]
+      params[key.name] = regexResult[i + 1] ?? null
       return params
     }, {} as any)
+
+    delete params[REST_PARAMETER_NAME]
 
     return [true, params]
   }

@@ -14,6 +14,11 @@ export const pathToRegex = (pattern: string): PathToRegexResult => {
     keys: { name: string }[] = [],
     result = ""
 
+  pattern =
+    pattern[pattern.length - 1] === "/"
+      ? pattern.substring(0, pattern.length - 1)
+      : pattern
+
   while ((match = groupRx.exec(pattern)) !== null) {
     const [_, segment, mod] = match
 

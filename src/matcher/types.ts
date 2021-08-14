@@ -8,7 +8,7 @@ export type PathMatcher = <TParams extends MatchedParams>(
 
 export type MatchedPath<TParams extends MatchedParams = MatchedParams> = [
   boolean,
-  TParams | undefined
+  TParams | null
 ]
 
 export type MatchedParams = Record<string, string>

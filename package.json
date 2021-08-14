@@ -28,7 +28,7 @@
     "coverage": "jest --coverage && echo '\nOpen \"coverage/lcov-report/index.html\" in your browser\n'",
     "lint": "tsc --noEmit",
     "format": "prettier --write .",
-    "build": "tsc --noEmit && tsup src/old/index.ts --clean --dts --sourcemap --format esm,cjs --legacy-output",
+    "build": "tsc --noEmit && tsup src/index.ts --clean --dts --sourcemap --format esm,cjs --legacy-output",
     "release": "np --no-release-draft",
     "preview": "np --no-release-draft --tag dev",
     "version": "yarn run build"

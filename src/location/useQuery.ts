@@ -43,7 +43,6 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
     const finalQuery = {
       ...defaultQuery,
       ...stripIgnoredValues(
-        //
         defaultQuery
           ? pickRelevantQueryParts(defaultQuery, routeQuery)
           : routeQuery,

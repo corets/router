@@ -10,5 +10,11 @@ export const createPathWithBase = (
     return path
   }
 
-  return [base, path].join("/").replace(/\/+/g, "/")
+  const pathWithBase = [base, path].join("/").replace(/\/+/g, "/")
+
+  if (pathWithBase !== "/") {
+    return pathWithBase.replace(/\/+$/, "")
+  }
+
+  return pathWithBase
 }
