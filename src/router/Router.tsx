@@ -45,7 +45,7 @@ export const Router = (props: RouterProps) => {
   } = props
   const history = useHistory(props.history)
   const location = useLocation(history)
-  const redirect = useRedirect(history)
+  const redirect = useRedirect(history, { base })
 
   const registry = useValue<RouterRegistry>({})
   const pathMatcher = useMemo(

@@ -31,6 +31,7 @@ describe("Link", () => {
     expect(await screen.findByText("link")).toBeInTheDocument()
     expect(await screen.findByText("bar")).toBeInTheDocument()
 
+    expect(screen.getByText("link")).toHaveAttribute("href", "/foo")
     expect(screen.getByText("link")).toHaveAttribute("data-matches", "false")
 
     fireEvent.click(screen.getByText("link"))
@@ -57,5 +58,47 @@ describe("Link", () => {
 
     expect(screen.getByText("link1")).toHaveAttribute("data-matches", "true")
     expect(screen.getByText("link2")).toHaveAttribute("data-matches", "false")
+  })
+
+  it("respects the base prop", async () => {
+    const history = createStaticHistory("/foo")
+
+    render(
+      <Router history={history} base="/foo">
+        <Link to="/">link1</Link>
+        <Link to="/bar">link2</Link>
+        <Link to="/bar" base="/">
+          link3
+        </Link>
+      </Router>
+    )
+
+    expect(await screen.findByText("link1")).toBeInTheDocument()
+    expect(await screen.findByText("link2")).toBeInTheDocument()
+    expect(await screen.findByText("link3")).toBeInTheDocument()
+
+    expect(screen.getByText("link1")).toHaveAttribute("href", "/foo")
+    expect(screen.getByText("link2")).toHaveAttribute("href", "/foo/bar")
+    expect(screen.getByText("link3")).toHaveAttribute("href", "/bar")
+
+    expect(screen.getByText("link1")).toHaveAttribute("data-matches", "true")
+    expect(screen.getByText("link2")).toHaveAttribute("data-matches", "false")
+    expect(screen.getByText("link3")).toHaveAttribute("data-matches", "false")
+
+    fireEvent.click(screen.getByText("link2"))
+
+    expect(screen.getByText("link1")).toHaveAttribute("data-matches", "true")
+    expect(screen.getByText("link2")).toHaveAttribute("data-matches", "true")
+    expect(screen.getByText("link3")).toHaveAttribute("data-matches", "false")
+
+    expect(history.location.pathname).toBe("/foo/bar")
+
+    fireEvent.click(screen.getByText("link3"))
+
+    expect(screen.getByText("link1")).toHaveAttribute("data-matches", "false")
+    expect(screen.getByText("link2")).toHaveAttribute("data-matches", "false")
+    expect(screen.getByText("link3")).toHaveAttribute("data-matches", "true")
+
+    expect(history.location.pathname).toBe("/bar")
   })
 })

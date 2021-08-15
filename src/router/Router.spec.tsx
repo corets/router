@@ -281,4 +281,39 @@ describe("Router", () => {
 
     expect(await screen.findByText("bar")).toBeInTheDocument()
   })
+
+  it("redirects and respects the base path", async () => {
+    const history = createStaticHistory("/foo")
+
+    const Test = () => {
+      const router = useContext(RouterContext)!
+
+      const handleClick1 = () => router.redirect("/bar")
+      const handleClick2 = () => router.redirect("/bar", { base: "/" })
+
+      return (
+        <>
+          <button onClick={handleClick1}>redirect1</button>
+          <button onClick={handleClick2}>redirect2</button>
+        </>
+      )
+    }
+
+    render(
+      <Router history={history} base="/foo">
+        <Test />
+      </Router>
+    )
+
+    expect(await screen.findByText("redirect1")).toBeInTheDocument()
+    expect(await screen.findByText("redirect2")).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText("redirect1"))
+
+    expect(history.location.pathname).toBe("/foo/bar")
+
+    fireEvent.click(screen.getByText("redirect2"))
+
+    expect(history.location.pathname).toBe("/bar")
+  })
 })

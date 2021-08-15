@@ -13,6 +13,7 @@ export type UseHistory = (history?: History) => History
 export type UseRedirect = (
   history?: History,
   options?: {
+    base?: string
     queryParser?: QueryParser
     queryStringifier?: QueryStringifier
   }
@@ -23,6 +24,7 @@ export type RedirectHandle = (
   options?: {
     query?: ParsedQuery
     hash?: string
+    base?: string
     preserveQuery?: boolean
     preserveHash?: boolean
   }

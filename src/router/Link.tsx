@@ -1,14 +1,7 @@
-import React, {
-  AnchorHTMLAttributes,
-  forwardRef,
-  MouseEvent,
-  useContext,
-  useMemo,
-} from "react"
+import React, { AnchorHTMLAttributes, forwardRef, MouseEvent } from "react"
 import { History } from "history"
-import { RouterContext } from "./index"
-import { createPathWithBase } from "../matcher"
 import { useMatch, useRedirect } from "../location"
+import { usePathWithBase } from "./usePathWithBase"
 
 export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   to: string
@@ -19,11 +12,9 @@ export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
 }
 
 export const Link = forwardRef((props: LinkProps, ref) => {
-  const { to, exact, history, intercept = true, ...otherProps } = props
+  const { to, exact, history, base, intercept = true, ...otherProps } = props
 
-  const router = useContext(RouterContext)
-  const base = props.base ?? router?.base
-  const href = useMemo(() => createPathWithBase(to, base), [base, to])
+  const href = usePathWithBase(to, base)
   const [matches] = useMatch(to, { base, exact })
   const redirect = useRedirect(history)
 
@@ -42,7 +33,7 @@ export const Link = forwardRef((props: LinkProps, ref) => {
     e.preventDefault()
     e.stopPropagation()
 
-    redirect(href)
+    redirect(to, { base })
   }
 
   return (
