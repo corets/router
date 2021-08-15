@@ -9,7 +9,7 @@ import {
 import { Router } from "./Router"
 import { RouterContext } from "./RouterContext"
 import { RouterRegistryContext } from "./RouterRegistryContext"
-import { createStaticHistory } from "./helpers/createStaticHistory"
+import { createTestHistory } from "./createTestHistory"
 import { Route } from "../route"
 
 describe("Router", () => {
@@ -48,7 +48,7 @@ describe("Router", () => {
   it("renders all routes that match the current path", async () => {
     const Test = () => {
       return (
-        <Router history={createStaticHistory("/foo")}>
+        <Router history={createTestHistory("/foo")}>
           <Route path="/foo">foo</Route>
           <Route path="/foo">bar</Route>
           <Route path="/404">baz</Route>
@@ -66,7 +66,7 @@ describe("Router", () => {
   it("always renders routes without a path", async () => {
     const Test = () => {
       return (
-        <Router history={createStaticHistory("/foo")}>
+        <Router history={createTestHistory("/foo")}>
           <Route>foo</Route>
         </Router>
       )
@@ -78,11 +78,11 @@ describe("Router", () => {
   })
 
   it("re-renders when location changes", async () => {
-    const history = createStaticHistory("/foo")
+    const testHistory = createTestHistory("/foo")
 
     const Test = () => {
       return (
-        <Router history={history} wait={0}>
+        <Router history={testHistory} wait={0}>
           <Route path="/foo">foo</Route>
           <Route path="/bar">bar</Route>
         </Router>
@@ -94,18 +94,18 @@ describe("Router", () => {
     expect(await screen.findByText("foo")).toBeInTheDocument()
     expect(screen.queryByText("bar")).toBe(null)
 
-    act(() => history.push("/bar"))
+    act(() => testHistory.push("/bar"))
 
     expect(await screen.findByText("bar")).toBeInTheDocument()
     expect(screen.queryByText("foo")).toBe(null)
   })
 
   it("renders nested routes", async () => {
-    const history = createStaticHistory("/foo")
+    const testHistory = createTestHistory("/foo")
 
     const Test = () => {
       return (
-        <Router history={history} wait={0}>
+        <Router history={testHistory} wait={0}>
           <Route path="/foo">
             foo
             <Route path="/foo/bar">bar</Route>
@@ -121,19 +121,19 @@ describe("Router", () => {
     expect(screen.queryByText("bar")).toBe(null)
     expect(screen.queryByText("baz")).toBe(null)
 
-    act(() => history.push("/foo/bar"))
+    act(() => testHistory.push("/foo/bar"))
 
     expect(await screen.findByText("foo")).toBeInTheDocument()
     expect(await screen.findByText("bar")).toBeInTheDocument()
     expect(screen.queryByText("baz")).toBe(null)
 
-    act(() => history.push("/baz"))
+    act(() => testHistory.push("/baz"))
 
     expect(await screen.findByText("baz")).toBeInTheDocument()
     expect(screen.queryByText("foo")).toBe(null)
     expect(screen.queryByText("bar")).toBe(null)
 
-    act(() => history.push("/foo/bar"))
+    act(() => testHistory.push("/foo/bar"))
 
     expect(await screen.findByText("foo")).toBeInTheDocument()
     expect(await screen.findByText("bar")).toBeInTheDocument()
@@ -141,11 +141,11 @@ describe("Router", () => {
   })
 
   it("respects base path", async () => {
-    const history = createStaticHistory("/")
+    const testHistory = createTestHistory("/")
 
     const Test = () => {
       return (
-        <Router history={history} base="/base">
+        <Router history={testHistory} base="/base">
           <Route path="/foo">foo</Route>
           <Route>bar</Route>
         </Router>
@@ -157,12 +157,12 @@ describe("Router", () => {
     expect(screen.queryByText("foo")).toBe(null)
     expect(screen.queryByText("bar")).toBe(null)
 
-    act(() => history.push("/base"))
+    act(() => testHistory.push("/base"))
 
     expect(await screen.findByText("bar")).toBeInTheDocument()
     expect(screen.queryByText("foo")).toBe(null)
 
-    act(() => history.push("/base/foo"))
+    act(() => testHistory.push("/base/foo"))
 
     expect(await screen.findByText("bar")).toBeInTheDocument()
     expect(await screen.findByText("foo")).toBeInTheDocument()
@@ -194,7 +194,7 @@ describe("Router", () => {
   })
 
   it("tells if router is unloading", async () => {
-    const history = createStaticHistory("/foo")
+    const testHistory = createTestHistory("/foo")
 
     const Test = () => {
       const router = useContext(RouterContext)!
@@ -209,7 +209,7 @@ describe("Router", () => {
     }
 
     render(
-      <Router history={history}>
+      <Router history={testHistory}>
         <Test />
       </Router>
     )
@@ -217,7 +217,7 @@ describe("Router", () => {
     expect(await screen.findByText("foo")).toBeInTheDocument()
     expect(screen.queryByText("unloading")).toBe(null)
 
-    act(() => history.push("/bar"))
+    act(() => testHistory.push("/bar"))
 
     expect(await screen.findByText("unloading")).toBeInTheDocument()
     expect(await screen.findByText("bar")).toBeInTheDocument()
@@ -248,7 +248,7 @@ describe("Router", () => {
   })
 
   it("redirects to another route", async () => {
-    const history = createStaticHistory("/foo")
+    const testHistory = createTestHistory("/foo")
 
     const Test = () => {
       const router = useContext(RouterContext)!
@@ -267,7 +267,7 @@ describe("Router", () => {
     }
 
     render(
-      <Router history={history}>
+      <Router history={testHistory}>
         <Test />
       </Router>
     )
@@ -283,7 +283,7 @@ describe("Router", () => {
   })
 
   it("redirects and respects the base path", async () => {
-    const history = createStaticHistory("/foo")
+    const testHistory = createTestHistory("/foo")
 
     const Test = () => {
       const router = useContext(RouterContext)!
@@ -300,7 +300,7 @@ describe("Router", () => {
     }
 
     render(
-      <Router history={history} base="/foo">
+      <Router history={testHistory} base="/foo">
         <Test />
       </Router>
     )
@@ -310,10 +310,10 @@ describe("Router", () => {
 
     fireEvent.click(screen.getByText("redirect1"))
 
-    expect(history.location.pathname).toBe("/foo/bar")
+    expect(testHistory.location.pathname).toBe("/foo/bar")
 
     fireEvent.click(screen.getByText("redirect2"))
 
-    expect(history.location.pathname).toBe("/bar")
+    expect(testHistory.location.pathname).toBe("/bar")
   })
 })
