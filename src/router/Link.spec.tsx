@@ -73,10 +73,6 @@ describe("Link", () => {
       </Router>
     )
 
-    expect(await screen.findByText("link1")).toBeInTheDocument()
-    expect(await screen.findByText("link2")).toBeInTheDocument()
-    expect(await screen.findByText("link3")).toBeInTheDocument()
-
     expect(screen.getByText("link1")).toHaveAttribute("href", "/foo")
     expect(screen.getByText("link2")).toHaveAttribute("href", "/foo/bar")
     expect(screen.getByText("link3")).toHaveAttribute("href", "/bar")
@@ -100,5 +96,81 @@ describe("Link", () => {
     expect(screen.getByText("link3")).toHaveAttribute("data-matches", "true")
 
     expect(history.location.pathname).toBe("/bar")
+  })
+
+  it("intercepts clicks", async () => {
+    const history = createStaticHistory("/")
+
+    const windowLocation = window.location
+    window.location = { pathname: "/" } as any
+
+    render(
+      <Router history={history}>
+        <Link to="/foo">link1</Link>
+        <Link to="/bar" intercept={false}>
+          link2
+        </Link>
+        <Link to="/bar">link3</Link>
+        <Link to="/bar" target="_blank">
+          link4
+        </Link>
+        <Link to="/bar" target="_parent">
+          link5
+        </Link>
+        <Link to="/bar" target="_top">
+          link6
+        </Link>
+        <Link to="/bar" target="_self">
+          link7
+        </Link>
+      </Router>
+    )
+
+    expect(history.location.pathname).toBe("/")
+
+    fireEvent.click(screen.getByText("link1"))
+
+    expect(history.location.pathname).toBe("/foo")
+
+    fireEvent.click(screen.getByText("link2"))
+
+    // should not change, event is handled by the window
+    expect(history.location.pathname).toBe("/foo")
+
+    fireEvent.click(screen.getByText("link3"), { ctrlKey: true })
+
+    // should not change, event is handled by the window
+    expect(history.location.pathname).toBe("/foo")
+
+    fireEvent.click(screen.getByText("link3"), { metaKey: true })
+
+    // should not change, event is handled by the window
+    expect(history.location.pathname).toBe("/foo")
+
+    fireEvent.click(screen.getByText("link3"), { altKey: true })
+
+    // should not change, event is handled by the window
+    expect(history.location.pathname).toBe("/foo")
+
+    fireEvent.click(screen.getByText("link4"))
+
+    // should not change, event is handled by the window
+    expect(history.location.pathname).toBe("/foo")
+
+    fireEvent.click(screen.getByText("link5"))
+
+    // should not change, event is handled by the window
+    expect(history.location.pathname).toBe("/foo")
+
+    fireEvent.click(screen.getByText("link6"))
+
+    // should not change, event is handled by the window
+    expect(history.location.pathname).toBe("/foo")
+
+    fireEvent.click(screen.getByText("link7"))
+
+    expect(history.location.pathname).toBe("/bar")
+
+    window.location = windowLocation
   })
 })
