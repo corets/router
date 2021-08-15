@@ -26,3 +26,9 @@ export type UseRouter = () => RouterHandle
 export type RouterRegistry = Record<string, RouteState>
 
 export type UseRouterRegistry = () => ObservableValue<RouterRegistry>
+
+export type UseRouterIsLoading = () => boolean
+
+export type UseRouterIsUnloading = () => boolean
+
+export type UseRouterIsShowing = () => boolean
