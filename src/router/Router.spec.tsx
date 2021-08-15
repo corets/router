@@ -49,15 +49,9 @@ describe("Router", () => {
     const Test = () => {
       return (
         <Router history={createStaticHistory("/foo")}>
-          <Route path="/foo">
-            <div>foo</div>
-          </Route>
-          <Route path="/foo">
-            <div>bar</div>
-          </Route>
-          <Route path="/404">
-            <div>baz</div>
-          </Route>
+          <Route path="/foo">foo</Route>
+          <Route path="/foo">bar</Route>
+          <Route path="/404">baz</Route>
         </Router>
       )
     }
@@ -73,9 +67,7 @@ describe("Router", () => {
     const Test = () => {
       return (
         <Router history={createStaticHistory("/foo")}>
-          <Route>
-            <div>foo</div>
-          </Route>
+          <Route>foo</Route>
         </Router>
       )
     }
@@ -91,12 +83,8 @@ describe("Router", () => {
     const Test = () => {
       return (
         <Router history={history} wait={0}>
-          <Route path="/foo">
-            <div>foo</div>
-          </Route>
-          <Route path="/bar">
-            <div>bar</div>
-          </Route>
+          <Route path="/foo">foo</Route>
+          <Route path="/bar">bar</Route>
         </Router>
       )
     }
@@ -119,16 +107,10 @@ describe("Router", () => {
       return (
         <Router history={history} wait={0}>
           <Route path="/foo">
-            <div>
-              <div>foo</div>
-              <Route path="/foo/bar">
-                <div>bar</div>
-              </Route>
-            </div>
+            foo
+            <Route path="/foo/bar">bar</Route>
           </Route>
-          <Route path="/baz">
-            <div>baz</div>
-          </Route>
+          <Route path="/baz">baz</Route>
         </Router>
       )
     }
@@ -164,12 +146,8 @@ describe("Router", () => {
     const Test = () => {
       return (
         <Router history={history} base="/base">
-          <Route path="/foo">
-            <div>foo</div>
-          </Route>
-          <Route>
-            <div>bar</div>
-          </Route>
+          <Route path="/foo">foo</Route>
+          <Route>bar</Route>
         </Router>
       )
     }
@@ -197,9 +175,7 @@ describe("Router", () => {
       return (
         <>
           {router.isLoading() ? "loading" : "loaded"}
-          <Route>
-            <div>foo</div>
-          </Route>
+          <Route>foo</Route>
         </>
       )
     }
@@ -226,12 +202,8 @@ describe("Router", () => {
       return (
         <>
           {router.isUnloading() ? "unloading" : "unloaded"}
-          <Route path="/foo">
-            <div>foo</div>
-          </Route>
-          <Route path="/bar">
-            <div>bar</div>
-          </Route>
+          <Route path="/foo">foo</Route>
+          <Route path="/bar">bar</Route>
         </>
       )
     }
@@ -259,9 +231,7 @@ describe("Router", () => {
       return (
         <>
           {router.isShowing() && "showing"}
-          <Route>
-            <div>foo</div>
-          </Route>
+          <Route>foo</Route>
         </>
       )
     }
@@ -288,14 +258,10 @@ describe("Router", () => {
       return (
         <>
           <Route path="/foo">
-            <>
-              <div>foo</div>
-              <button onClick={handleClick}>redirect</button>
-            </>
+            foo
+            <button onClick={handleClick}>redirect</button>
           </Route>
-          <Route path="/bar">
-            <div>bar</div>
-          </Route>
+          <Route path="/bar">bar</Route>
         </>
       )
     }

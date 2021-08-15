@@ -37,7 +37,7 @@ export type RouteProps = {
   exact?: boolean
   render?: RouteRenderer
   load?: RouteLoader
-  children?: ReactElement | ComponentType
+  children?: ReactNode | ComponentType
   wait?: number
   loadable?: boolean
   unloadable?: boolean
@@ -266,6 +266,10 @@ const initializeComponent = async (
       if (isValidElement(children)) {
         return () => <>{children}</>
       } else {
+        if (Array.isArray(children) || typeof children === "string") {
+          return () => <>{children}</>
+        }
+
         return children as ComponentType
       }
     }
