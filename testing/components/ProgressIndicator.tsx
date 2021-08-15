@@ -4,6 +4,19 @@ import { useRouter } from "../../src/router/useRouter"
 export const ProgressIndicator = () => {
   const router = useRouter()
 
+  const status = (() => {
+    if (router.isLoading()) {
+      if (! router.isShowing() && ! router.isUnloading()) {
+
+      return "initializing"
+      }
+
+      return "loading"
+    }
+
+    return "-"
+  })()
+
   return (
     <div
       style={{
@@ -15,7 +28,7 @@ export const ProgressIndicator = () => {
         right: 0,
       }}
     >
-      {router.isLoading() ? "loading" : "-"}
+      {status}
     </div>
   )
 }

@@ -69,7 +69,7 @@ export const Router = (props: RouterProps) => {
 
   const isUnloading = () => {
     return !!Object.values(registry.get()).find((r) =>
-      [RouteStatus.Unload, RouteStatus.Unload].includes(r.status)
+      [RouteStatus.Unload, RouteStatus.Unloaded].includes(r.status)
     )
   }
 

@@ -1,16 +1,16 @@
 import { RouteStatus } from "../../route"
 
 export enum IntendedRouteStatus {
-  Initialize,
-  Initializing,
-  Load,
-  Loading,
-  Show,
-  Showing,
-  Unload,
-  Unloading,
-  Disable,
-  Idle,
+  Initialize = "INITIALIZE",
+  Initializing = "INITIALIZING",
+  Load = "LOAD",
+  Loading = "LOADING",
+  Show = "SHOW",
+  Showing = "SHOWING",
+  Unload = "UNLOAD",
+  Unloading = "UNLOADING",
+  Idle = "IDLE",
+  Idling = "IDLING",
 }
 
 export const calculateIntendedRoutesStatus = (
@@ -30,26 +30,29 @@ export const calculateIntendedRoutesStatus = (
       return IntendedRouteStatus.Show
     } else if (currentStatus === RouteStatus.Show) {
       return IntendedRouteStatus.Showing
+    } else if (currentStatus === RouteStatus.Shown) {
+      return IntendedRouteStatus.Showing
     }
-  } else {
-    if (
-      [
-        RouteStatus.Initialize,
-        RouteStatus.Initialized,
-        RouteStatus.Loaded,
-        RouteStatus.Show,
-        RouteStatus.Shown,
-      ].includes(currentStatus)
-    ) {
-      return IntendedRouteStatus.Unload
-    } else if (currentStatus === RouteStatus.Load) {
-      return IntendedRouteStatus.Disable
-    } else if (currentStatus === RouteStatus.Unload) {
-      return IntendedRouteStatus.Unloading
-    } else if (currentStatus === RouteStatus.Unloaded) {
-      return IntendedRouteStatus.Disable
-    }
+
+    return IntendedRouteStatus.Initialize
   }
 
-  return IntendedRouteStatus.Idle
+  if (
+    [
+      RouteStatus.Initialize,
+      RouteStatus.Initialized,
+      RouteStatus.Load,
+      RouteStatus.Loaded,
+      RouteStatus.Show,
+      RouteStatus.Shown,
+    ].includes(currentStatus)
+  ) {
+    return IntendedRouteStatus.Unload
+  } else if (currentStatus === RouteStatus.Unload) {
+    return IntendedRouteStatus.Unloading
+  } else if (currentStatus === RouteStatus.Unloaded) {
+    return IntendedRouteStatus.Idle
+  }
+
+  return IntendedRouteStatus.Idling
 }

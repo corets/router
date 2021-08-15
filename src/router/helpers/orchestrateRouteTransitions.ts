@@ -31,8 +31,8 @@ export const orchestrateRouteTransitions = (
   const showing = groupedRoutes[IntendedRouteStatus.Showing]
   const unload = groupedRoutes[IntendedRouteStatus.Unload]
   const unloading = groupedRoutes[IntendedRouteStatus.Unloading]
-  const disable = groupedRoutes[IntendedRouteStatus.Disable]
   const idle = groupedRoutes[IntendedRouteStatus.Idle]
+  const idling = groupedRoutes[IntendedRouteStatus.Idling]
 
   if (initialize?.length || load?.length) {
     if (initialize?.length) {
@@ -65,8 +65,8 @@ export const orchestrateRouteTransitions = (
   } else if (unloading?.length) {
     // skip
   } else {
-    if (disable?.length) {
-      for (const routeAndId of disable) {
+    if (idle?.length) {
+      for (const routeAndId of idle) {
         const [routeId, route] = routeAndId
 
         debug && logRouteHasChangedStatus(route.path, RouteStatus.Idle)
