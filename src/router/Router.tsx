@@ -63,7 +63,12 @@ export const Router = (props: RouterProps) => {
 
   const isLoading = () => {
     return !!Object.values(registry.get()).find((r) =>
-      [RouteStatus.Load, RouteStatus.Loaded].includes(r.status)
+      [
+        RouteStatus.Initialize,
+        RouteStatus.Initialized,
+        RouteStatus.Load,
+        RouteStatus.Loaded,
+      ].includes(r.status)
     )
   }
 

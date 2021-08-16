@@ -33,9 +33,6 @@ import { useValue } from "@corets/use-value"
 export type RouteProps = {
   path?: string
   exact?: boolean
-  render?: RouteRenderer
-  load?: RouteLoader
-  children?: ReactNode | ComponentType
   wait?: number
   loadable?: boolean
   unloadable?: boolean
@@ -43,8 +40,22 @@ export type RouteProps = {
   debug?: boolean
 }
 
-export const Route = (props: RouteProps) => {
-  const { render, load, children } = props
+export type RoutePropsWithChildren = RouteProps & {
+  children: ReactNode | ComponentType
+}
+
+export type RoutePropsWithRenderer = RouteProps & {
+  render: RouteRenderer
+}
+
+export type RoutePropsWithLoader = RouteProps & {
+  load: RouteLoader
+}
+
+export const Route = (
+  props: RoutePropsWithChildren | RoutePropsWithRenderer | RoutePropsWithLoader
+) => {
+  const { render, load, children } = props as any
   const router = useRouter()
 
   if (!render && !load && !children) {

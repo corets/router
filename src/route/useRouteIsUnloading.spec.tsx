@@ -21,7 +21,7 @@ describe("useRouteIsUnloading", () => {
     }
 
     render(
-      <Router history={testHistory}>
+      <Router history={testHistory} unloadable>
         <Route path="/foo">
           <div>foo</div>
           <Test />
@@ -38,9 +38,7 @@ describe("useRouteIsUnloading", () => {
 
     expect(await screen.findByText("no")).toBeInTheDocument()
 
-    act(() => {
-      testHistory.push("/bar")
-    })
+    act(() => testHistory.push("/bar"))
 
     expect(await screen.findByText("yes")).toBeInTheDocument()
 
