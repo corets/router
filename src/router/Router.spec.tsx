@@ -108,7 +108,7 @@ describe("Router", () => {
         <Router history={testHistory} wait={0}>
           <Route path="/foo">
             foo
-            <Route path="/foo/bar">bar</Route>
+            <Route path="/bar">bar</Route>
           </Route>
           <Route path="/baz">baz</Route>
         </Router>

@@ -8,29 +8,37 @@ import {
   UseRouteRegistration,
 } from "./types"
 import { useRouterRegistry } from "../router/useRouterRegistry"
+import { RouteContext } from "./RouteContext"
+import { createPathWithBase } from "../matcher"
 
 let routeIdCounter = 0
 
 export const useRouteRegistration: UseRouteRegistration = (
   args
 ): RouteRegistration => {
-  const { path, exact, debug } = args
+  const { exact, debug } = args
   const registry = useRouterRegistry()
   const groupId = useContext(RouteGroupContext)
+  const parentRoute = useContext(RouteContext)
 
   const routeId = useMemo(() => {
     return (routeIdCounter++).toString()
-  }, [path, exact, groupId])
+  }, [args.path, exact, groupId, parentRoute?.path])
 
   const initialRoute: RouteState = useMemo(() => {
     return {
       routeId,
       groupId,
-      path,
+      path: createPathWithBase(args.path, parentRoute?.path),
       exact,
       status: RouteStatus.Idle,
     }
   }, [routeId])
+
+  const route = {
+    ...initialRoute,
+    ...registry.get()?.[routeId],
+  }
 
   const reportStatus = (status: RouteStatus) => {
     const routes = registry.get()
@@ -49,20 +57,15 @@ export const useRouteRegistration: UseRouteRegistration = (
       ...registry.get(),
       [routeId]: initialRoute,
     })
-    debug && logRouteRegistered(path)
+    debug && logRouteRegistered(route.path)
 
     return () => {
       const newRegistry = registry.get()
       delete newRegistry[routeId]
       registry.set(newRegistry)
-      debug && logRouteUnregistered(path)
+      debug && logRouteUnregistered(route.path)
     }
   }, [routeId])
-
-  const route = {
-    ...initialRoute,
-    ...registry.get()?.[routeId],
-  }
 
   const registration: RouteRegistration = {
     route,

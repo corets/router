@@ -1,8 +1,6 @@
 import React, {
   ComponentType,
   isValidElement,
-  ReactChild,
-  ReactElement,
   ReactNode,
   useEffect,
   useState,
@@ -228,6 +226,7 @@ export const Route = (props: RouteProps) => {
     <RouteContext.Provider value={routeHandle}>
       {renderRoute ? (
         <div
+          className="shadowed-route"
           style={
             controlled
               ? {}

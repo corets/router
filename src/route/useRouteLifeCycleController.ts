@@ -48,7 +48,7 @@ export const useRouteLifeCycleController = (args: {
   }
 
   const stopUnloading = (id: number) => {
-    if (!loadable) return
+    if (!unloadable) return
 
     if (activeUnloaderIds.get().includes(id)) {
       activeUnloaderIds.set(activeUnloaderIds.get().filter((i) => i !== id))
