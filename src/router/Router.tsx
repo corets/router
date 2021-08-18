@@ -79,8 +79,10 @@ export const Router = (props: RouterProps) => {
   }
 
   const isShowing = () => {
-    return !!Object.values(registry.get()).find(
-      (r) => r.status === RouteStatus.Shown
+    return !!Object.values(registry.get()).find((r) =>
+      [RouteStatus.Show, RouteStatus.Unload, RouteStatus.Unloaded].includes(
+        r.status
+      )
     )
   }
 

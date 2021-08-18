@@ -3,6 +3,7 @@ import { useRouteStatus } from "./useRouteStatus"
 import { render, screen } from "@testing-library/react"
 import { Router } from "../router"
 import { Route } from "./Route"
+import { RouteStatus } from "./types"
 
 describe("useRouteStatus", () => {
   it("returns route status", async () => {
@@ -20,6 +21,6 @@ describe("useRouteStatus", () => {
       </Router>
     )
 
-    expect(await screen.findByText("SHOWN")).toBeInTheDocument()
+    expect(await screen.findByText(RouteStatus.Show)).toBeInTheDocument()
   })
 })

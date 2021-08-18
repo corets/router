@@ -5,12 +5,11 @@ import { Location } from "history"
 
 export enum RouteStatus {
   Idle = "IDLE",
+  Show = "SHOW",
   Initialize = "INITIALIZE",
   Initialized = "INITIALIZED",
   Load = "LOAD",
   Loaded = "LOADED",
-  Show = "SHOW",
-  Shown = "SHOWN",
   Unload = "UNLOAD",
   Unloaded = "UNLOADED",
 }

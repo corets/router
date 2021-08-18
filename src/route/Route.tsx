@@ -96,7 +96,7 @@ export const Route = (
       [RouteStatus.Load, RouteStatus.Loaded].includes(route.status),
     isUnloading: () =>
       [RouteStatus.Unload, RouteStatus.Unload].includes(route.status),
-    isShowing: () => route.status === RouteStatus.Shown,
+    isShowing: () => route.status === RouteStatus.Show,
   }
 
   const [Component, setComponent] = useState<ComponentType | null>(null)
@@ -151,15 +151,6 @@ export const Route = (
 
       // enable monitoring of the life cycle unloaders
       checkUnloaders.set(true)
-
-      return
-    }
-
-    if (route.status === RouteStatus.Show) {
-      router.debug &&
-        logRouteIsTryingToChangeStatus(route.path, RouteStatus.Show)
-      reportStatus(RouteStatus.Shown)
-      router.debug && logRouteHasChangedStatus(route.path, RouteStatus.Shown)
 
       return
     }
@@ -220,27 +211,26 @@ export const Route = (
     RouteStatus.Unload,
     RouteStatus.Unloaded,
     RouteStatus.Show,
-    RouteStatus.Shown,
   ].includes(route.status as any)
 
   const showRoute =
     renderRoute &&
-    [
-      RouteStatus.Show,
-      RouteStatus.Shown,
-      RouteStatus.Unload,
-      RouteStatus.Unloaded,
-    ].includes(route.status as any) &&
+    [RouteStatus.Show, RouteStatus.Unload, RouteStatus.Unloaded].includes(
+      route.status as any
+    ) &&
     !lifeCycle.isLoading()
 
   return (
     <RouteContext.Provider value={routeHandle}>
       {renderRoute ? (
         <div
-          className="shadowed-route"
+          className="corets-route"
           style={
             controlled
-              ? {}
+              ? {
+                  width: "100%",
+                  height: "100%",
+                }
               : {
                   width: "100%",
                   height: "100%",

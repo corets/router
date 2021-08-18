@@ -23,16 +23,14 @@ export const orchestrateRouteTransitions = (
 
   const groupedRoutes = groupRoutesByIntendedStatus(routes)
 
+  const idle = groupedRoutes[IntendedRouteStatus.Idle]
+  const show = groupedRoutes[IntendedRouteStatus.Show]
   const initialize = groupedRoutes[IntendedRouteStatus.Initialize]
   const initializing = groupedRoutes[IntendedRouteStatus.Initializing]
   const load = groupedRoutes[IntendedRouteStatus.Load]
   const loading = groupedRoutes[IntendedRouteStatus.Loading]
-  const show = groupedRoutes[IntendedRouteStatus.Show]
-  const showing = groupedRoutes[IntendedRouteStatus.Showing]
   const unload = groupedRoutes[IntendedRouteStatus.Unload]
   const unloading = groupedRoutes[IntendedRouteStatus.Unloading]
-  const idle = groupedRoutes[IntendedRouteStatus.Idle]
-  const idling = groupedRoutes[IntendedRouteStatus.Idling]
 
   if (initialize?.length || load?.length) {
     if (initialize?.length) {

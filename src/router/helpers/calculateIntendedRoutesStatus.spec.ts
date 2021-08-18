@@ -21,9 +21,6 @@ describe("calculateIntendedRoutesStatus", () => {
     expect(calculateIntendedRoutesStatus(RouteStatus.Loaded, true)).toBe(
       IntendedRouteStatus.Show
     )
-    expect(calculateIntendedRoutesStatus(RouteStatus.Show, true)).toBe(
-      IntendedRouteStatus.Showing
-    )
     expect(calculateIntendedRoutesStatus(RouteStatus.Unload, true)).toBe(
       IntendedRouteStatus.Initialize
     )
@@ -32,7 +29,7 @@ describe("calculateIntendedRoutesStatus", () => {
     )
 
     expect(calculateIntendedRoutesStatus(RouteStatus.Idle, false)).toBe(
-      IntendedRouteStatus.Idling
+      IntendedRouteStatus.Idle
     )
     expect(calculateIntendedRoutesStatus(RouteStatus.Initialize, false)).toBe(
       IntendedRouteStatus.Unload
@@ -47,9 +44,6 @@ describe("calculateIntendedRoutesStatus", () => {
       IntendedRouteStatus.Unload
     )
     expect(calculateIntendedRoutesStatus(RouteStatus.Show, false)).toBe(
-      IntendedRouteStatus.Unload
-    )
-    expect(calculateIntendedRoutesStatus(RouteStatus.Shown, false)).toBe(
       IntendedRouteStatus.Unload
     )
     expect(calculateIntendedRoutesStatus(RouteStatus.Unload, false)).toBe(
