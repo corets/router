@@ -1,7 +1,14 @@
-import { act, render, screen } from "@testing-library/react"
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from "@testing-library/react"
 import { createTestHistory, Router } from "../router"
-import React from "react"
+import React, { useContext } from "react"
 import { Route } from "./Route"
+import { RouteContext } from "./RouteContext"
 
 describe("Route", () => {
   it("renders an element from children", async () => {
@@ -193,5 +200,77 @@ describe("Route", () => {
 
     expect(await screen.findByText("content1")).toBeInTheDocument()
     expect(await screen.findByText("content2")).toBeInTheDocument()
+  })
+
+  it("redirects to another route", async () => {
+    const testHistory = createTestHistory("/foo")
+
+    const Test = () => {
+      const route = useContext(RouteContext)!
+
+      const handleClick = () => route.redirect("/bar")
+
+      return (
+        <>
+          foo
+          <button onClick={handleClick}>redirect</button>
+        </>
+      )
+    }
+
+    render(
+      <Router history={testHistory}>
+        <Route path="/foo">
+          <Test />
+        </Route>
+        <Route path="/bar">bar</Route>
+      </Router>
+    )
+
+    expect(await screen.findByText("foo")).toBeInTheDocument()
+    expect(screen.queryByText("bar")).toBe(null)
+
+    fireEvent.click(screen.getByText("redirect"))
+
+    await waitForElementToBeRemoved(() => screen.queryByText("foo"))
+
+    expect(await screen.findByText("bar")).toBeInTheDocument()
+  })
+
+  it("redirects and respects the base path", async () => {
+    const testHistory = createTestHistory("/foo")
+
+    const Test = () => {
+      const route = useContext(RouteContext)!
+
+      const handleClick1 = () => route.redirect("/bar")
+      const handleClick2 = () => route.redirect("/bar", { base: "/" })
+
+      return (
+        <>
+          <button onClick={handleClick1}>redirect1</button>
+          <button onClick={handleClick2}>redirect2</button>
+        </>
+      )
+    }
+
+    render(
+      <Router history={testHistory} base="/foo">
+        <Route>
+          <Test />
+        </Route>
+      </Router>
+    )
+
+    expect(await screen.findByText("redirect1")).toBeInTheDocument()
+    expect(await screen.findByText("redirect2")).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText("redirect1"))
+
+    expect(testHistory.location.pathname).toBe("/foo/bar")
+
+    fireEvent.click(screen.getByText("redirect2"))
+
+    expect(testHistory.location.pathname).toBe("/bar")
   })
 })

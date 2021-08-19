@@ -48,6 +48,7 @@ export type RouteHandle<
   isLoading(): boolean
   isUnloading(): boolean
   isShowing(): boolean
+  redirect(to: string, options?: { base?: string }): void
 }
 
 export type UseRoute = <

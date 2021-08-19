@@ -97,6 +97,7 @@ export const Route = (
     isUnloading: () =>
       [RouteStatus.Unload, RouteStatus.Unload].includes(route.status),
     isShowing: () => route.status === RouteStatus.Show,
+    redirect: router.redirect,
   }
 
   const [Component, setComponent] = useState<ComponentType | null>(null)
@@ -223,27 +224,30 @@ export const Route = (
   return (
     <RouteContext.Provider value={routeHandle}>
       {renderRoute ? (
-        <div
-          className="corets-route"
-          style={
-            controlled
-              ? {
-                  width: "100%",
-                  height: "100%",
-                }
-              : {
-                  width: "100%",
-                  height: "100%",
-                  display: showRoute ? "block" : "none",
-                }
-          }
-        >
-          <RouteGroupContext.Provider value={undefined}>
-            <RouteLifeCycleContext.Provider value={lifeCycle}>
-              <Component {...route.params} />
-            </RouteLifeCycleContext.Provider>
-          </RouteGroupContext.Provider>
-        </div>
+        <>
+          {controlled ? (
+            <RouteGroupContext.Provider value={undefined}>
+              <RouteLifeCycleContext.Provider value={lifeCycle}>
+                <Component {...route.params} />
+              </RouteLifeCycleContext.Provider>
+            </RouteGroupContext.Provider>
+          ) : (
+            <div
+              className="corets-route"
+              style={{
+                width: "100%",
+                height: "100%",
+                display: showRoute ? "block" : "none",
+              }}
+            >
+              <RouteGroupContext.Provider value={undefined}>
+                <RouteLifeCycleContext.Provider value={lifeCycle}>
+                  <Component {...route.params} />
+                </RouteLifeCycleContext.Provider>
+              </RouteGroupContext.Provider>
+            </div>
+          )}
+        </>
       ) : null}
     </RouteContext.Provider>
   )
