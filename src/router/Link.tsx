@@ -40,7 +40,7 @@ export const Link = forwardRef((props: LinkProps, ref) => {
     <a
       {...otherProps}
       ref={ref as any}
-      data-matches={matches}
+      data-active={matches}
       href={href}
       onClick={(e) => handleClick(e)}
     />
