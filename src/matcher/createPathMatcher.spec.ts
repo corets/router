@@ -164,7 +164,7 @@ describe("createPathMatcher", () => {
       false,
       null,
     ])
-    expect(matcher("/foo/:bar", "/foo/1/2/3")).toEqual([true, { bar: "1" }])
+    expect(matcher("/foo/:bar?", "/foo/1/2/3")).toEqual([true, { bar: "1" }])
     expect(matcher("/foo/:bar?", "/foo/1/2/3", { exact: true })).toEqual([
       false,
       null,

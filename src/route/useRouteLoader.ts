@@ -15,6 +15,8 @@ export const useRouteLoader: UseRouteLoader = (callback) => {
         `[Router]: route ${route.path} is trying to use a loader, but either the route itself nor the router have this feature enabled. You have to set the loadable flag, for example: <Route loadable /> or the <Router loadable />, to enable this feature.`
       )
     }
+
+    return () => loader.stop()
   }, [])
 
   useAsync(async () => {

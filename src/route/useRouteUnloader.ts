@@ -15,6 +15,8 @@ export const useRouteUnloader: UseRouteUnloader = (callback) => {
         `[Router]: route ${route.path} is trying to use an unloader, but either the route itself nor the router have this feature enabled. You have to set the unloadable flag, for example: <Route unloadable /> or the <Router unloadable />, to enable this feature.`
       )
     }
+
+    return () => unloader.stop()
   }, [])
 
   useAsync(async () => {
