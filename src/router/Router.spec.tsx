@@ -224,13 +224,13 @@ describe("Router", () => {
     expect(await screen.findByText("unloaded")).toBeInTheDocument()
   })
 
-  it("tells if router is showing", async () => {
+  it("tells if router is visible", async () => {
     const Test = () => {
       const router = useContext(RouterContext)!
 
       return (
         <>
-          {router.isShowing() && "showing"}
+          {router.isVisible() && "visible"}
           <Route>foo</Route>
         </>
       )
@@ -242,9 +242,9 @@ describe("Router", () => {
       </Router>
     )
 
-    expect(screen.queryByText("showing")).toBe(null)
+    expect(screen.queryByText("visible")).toBe(null)
     expect(await screen.findByText("foo")).toBeInTheDocument()
-    expect(await screen.findByText("showing")).toBeInTheDocument()
+    expect(await screen.findByText("visible")).toBeInTheDocument()
   })
 
   it("redirects to another route", async () => {

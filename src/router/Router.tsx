@@ -78,9 +78,9 @@ export const Router = (props: RouterProps) => {
     )
   }
 
-  const isShowing = () => {
+  const isVisible = () => {
     return !!Object.values(registry.get()).find((r) =>
-      [RouteStatus.Show, RouteStatus.Unload, RouteStatus.Unloaded].includes(
+      [RouteStatus.Visible, RouteStatus.Unload, RouteStatus.Unloaded].includes(
         r.status
       )
     )
@@ -100,7 +100,7 @@ export const Router = (props: RouterProps) => {
     controlled,
     isLoading,
     isUnloading,
-    isShowing,
+    isVisible,
   }
 
   useEffect(() => {

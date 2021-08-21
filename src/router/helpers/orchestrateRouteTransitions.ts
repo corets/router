@@ -24,7 +24,7 @@ export const orchestrateRouteTransitions = (
   const groupedRoutes = groupRoutesByIntendedStatus(routes)
 
   const idle = groupedRoutes[IntendedRouteStatus.Idle]
-  const show = groupedRoutes[IntendedRouteStatus.Show]
+  const visible = groupedRoutes[IntendedRouteStatus.Visible]
   const initialize = groupedRoutes[IntendedRouteStatus.Initialize]
   const initializing = groupedRoutes[IntendedRouteStatus.Initializing]
   const load = groupedRoutes[IntendedRouteStatus.Load]
@@ -72,12 +72,13 @@ export const orchestrateRouteTransitions = (
       }
     }
 
-    if (show?.length) {
-      for (const routeAndId of show) {
+    if (visible?.length) {
+      for (const routeAndId of visible) {
         const [routeId, route] = routeAndId
 
-        debug && logRouterScheduledRouteToStatus(route.path, RouteStatus.Show)
-        updateRouteStatus(routeId, route, RouteStatus.Show)
+        debug &&
+          logRouterScheduledRouteToStatus(route.path, RouteStatus.Visible)
+        updateRouteStatus(routeId, route, RouteStatus.Visible)
       }
     }
   }

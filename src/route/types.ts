@@ -5,7 +5,7 @@ import { Location } from "history"
 
 export enum RouteStatus {
   Idle = "IDLE",
-  Show = "SHOW",
+  Visible = "VISIBLE",
   Initialize = "INITIALIZE",
   Initialized = "INITIALIZED",
   Load = "LOAD",
@@ -47,7 +47,7 @@ export type RouteHandle<
   debug: boolean
   isLoading(): boolean
   isUnloading(): boolean
-  isShowing(): boolean
+  isVisible(): boolean
   redirect(to: string, options?: { base?: string }): void
 }
 
@@ -73,7 +73,7 @@ export type UseRouteIsLoading = () => boolean
 
 export type UseRouteIsUnloading = () => boolean
 
-export type UseRouteIsShowing = () => boolean
+export type UseRouteIsVisible = () => boolean
 
 export type RouteLifeCycleHandle = {
   isLoading(): boolean

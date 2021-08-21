@@ -1,14 +1,14 @@
 import { render, screen } from "@testing-library/react"
 import { Router } from "./Router"
 import React from "react"
-import { useRouterIsShowing } from "./useRouterIsShowing"
+import { useRouterIsVisible } from "./useRouterIsVisible"
 
-describe("useRouterIsShowing", () => {
-  it("returns isShowing from router", async () => {
+describe("useRouterIsVisible", () => {
+  it("returns isVisible from router", async () => {
     const Test = () => {
-      const isShowing = useRouterIsShowing()
+      const isVisible = useRouterIsVisible()
 
-      return <div>{isShowing.toString()}</div>
+      return <div>{isVisible.toString()}</div>
     }
 
     render(

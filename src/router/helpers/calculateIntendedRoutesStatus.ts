@@ -2,7 +2,7 @@ import { RouteStatus } from "../../route"
 
 export enum IntendedRouteStatus {
   Idle = "IDLE",
-  Show = "SHOW",
+  Visible = "VISIBLE",
   Initialize = "INITIALIZE",
   Initializing = "INITIALIZING",
   Load = "LOAD",
@@ -26,9 +26,9 @@ export const calculateIntendedRoutesStatus = (
     } else if (currentStatus === RouteStatus.Load) {
       return IntendedRouteStatus.Loading
     } else if (currentStatus === RouteStatus.Loaded) {
-      return IntendedRouteStatus.Show
-    } else if (currentStatus === RouteStatus.Show) {
-      return IntendedRouteStatus.Show
+      return IntendedRouteStatus.Visible
+    } else if (currentStatus === RouteStatus.Visible) {
+      return IntendedRouteStatus.Visible
     }
 
     return IntendedRouteStatus.Initialize
@@ -40,7 +40,7 @@ export const calculateIntendedRoutesStatus = (
       RouteStatus.Initialized,
       RouteStatus.Load,
       RouteStatus.Loaded,
-      RouteStatus.Show,
+      RouteStatus.Visible,
     ].includes(currentStatus)
   ) {
     return IntendedRouteStatus.Unload

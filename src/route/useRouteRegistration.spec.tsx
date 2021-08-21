@@ -66,14 +66,14 @@ describe("useRouteRegistration", () => {
       status: RouteStatus.Idle,
     } as RouteState)
 
-    act(() => registration.reportStatus(RouteStatus.Show))
+    act(() => registration.reportStatus(RouteStatus.Visible))
 
     expect(Object.values(registry.get())[0]).toEqual({
       path: "/foo",
       exact: true,
       groupId: undefined,
       routeId: "0",
-      status: RouteStatus.Show,
+      status: RouteStatus.Visible,
     } as RouteState)
 
     act(() => result.unmount())

@@ -96,7 +96,7 @@ export const Route = (
       [RouteStatus.Load, RouteStatus.Loaded].includes(route.status),
     isUnloading: () =>
       [RouteStatus.Unload, RouteStatus.Unload].includes(route.status),
-    isShowing: () => route.status === RouteStatus.Show,
+    isVisible: () => route.status === RouteStatus.Visible,
     redirect: router.redirect,
   }
 
@@ -211,12 +211,12 @@ export const Route = (
     RouteStatus.Loaded,
     RouteStatus.Unload,
     RouteStatus.Unloaded,
-    RouteStatus.Show,
+    RouteStatus.Visible,
   ].includes(route.status as any)
 
   const showRoute =
     renderRoute &&
-    [RouteStatus.Show, RouteStatus.Unload, RouteStatus.Unloaded].includes(
+    [RouteStatus.Visible, RouteStatus.Unload, RouteStatus.Unloaded].includes(
       route.status as any
     ) &&
     !lifeCycle.isLoading()

@@ -1,16 +1,16 @@
 import React from "react"
-import { useRouteIsShowing } from "./useRouteIsShowing"
+import { useRouteIsVisible } from "./useRouteIsVisible"
 import { act, render, screen } from "@testing-library/react"
 import { Router } from "../router"
 import { Route } from "./Route"
 import { createTimeout } from "@corets/promise-helpers"
 
-describe("useRouteIsShowing", () => {
-  it("tells if route is showing", async () => {
+describe("useRouteIsVisible", () => {
+  it("tells if route is visible", async () => {
     const Test = () => {
-      const isShowing = useRouteIsShowing()
+      const isVisible = useRouteIsVisible()
 
-      return <>{isShowing ? "yes" : "no"}</>
+      return <>{isVisible ? "yes" : "no"}</>
     }
 
     render(

@@ -18,7 +18,7 @@ export type RouterHandle = {
   redirect(to: string, options?: { base?: string }): void
   isLoading(): boolean
   isUnloading(): boolean
-  isShowing(): boolean
+  isVisible(): boolean
 }
 
 export type UseRouter = () => RouterHandle
@@ -31,6 +31,6 @@ export type UseRouterIsLoading = () => boolean
 
 export type UseRouterIsUnloading = () => boolean
 
-export type UseRouterIsShowing = () => boolean
+export type UseRouterIsVisible = () => boolean
 
 export type UsePathWithBase = (path: string, base?: string) => string

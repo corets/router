@@ -21,6 +21,6 @@ describe("useRouteStatus", () => {
       </Router>
     )
 
-    expect(await screen.findByText(RouteStatus.Show)).toBeInTheDocument()
+    expect(await screen.findByText(RouteStatus.Visible)).toBeInTheDocument()
   })
 })
