@@ -9,7 +9,6 @@ export enum IntendedRouteStatus {
   Loading = "LOADING",
   Unload = "UNLOAD",
   Unloading = "UNLOADING",
-  Idling = "IDLING",
 }
 
 export const calculateIntendedRoutesStatus = (
@@ -29,6 +28,10 @@ export const calculateIntendedRoutesStatus = (
       return IntendedRouteStatus.Visible
     } else if (currentStatus === RouteStatus.Visible) {
       return IntendedRouteStatus.Visible
+    } else if (currentStatus === RouteStatus.Unload) {
+      return IntendedRouteStatus.Unload
+    } else if (currentStatus === RouteStatus.Unloaded) {
+      return IntendedRouteStatus.Initialize
     }
 
     return IntendedRouteStatus.Initialize

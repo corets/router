@@ -22,7 +22,7 @@ describe("calculateIntendedRoutesStatus", () => {
       IntendedRouteStatus.Visible
     )
     expect(calculateIntendedRoutesStatus(RouteStatus.Unload, true)).toBe(
-      IntendedRouteStatus.Initialize
+      IntendedRouteStatus.Unload
     )
     expect(calculateIntendedRoutesStatus(RouteStatus.Unloaded, true)).toBe(
       IntendedRouteStatus.Initialize
