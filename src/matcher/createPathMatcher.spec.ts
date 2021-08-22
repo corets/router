@@ -300,4 +300,17 @@ describe("createPathMatcher", () => {
       matcher("/foo/:bar*/baz", "/foo/1/2/3/baz", { exact: true })
     ).toEqual([true, { bar: "1/2/3" }])
   })
+
+  it("matches with trailing slashes", () => {
+    const matcher = createPathMatcher()
+
+    expect(matcher("/foo", "/foo")).toEqual([true, {}])
+    expect(matcher("/foo", "/foo", { exact: true })).toEqual([true, {}])
+    expect(matcher("/foo/", "/foo")).toEqual([true, {}])
+    expect(matcher("/foo/", "/foo", { exact: true })).toEqual([true, {}])
+    expect(matcher("/foo", "/foo/")).toEqual([true, {}])
+    expect(matcher("/foo", "/foo/", { exact: true })).toEqual([true, {}])
+    expect(matcher("/foo/", "/foo/")).toEqual([true, {}])
+    expect(matcher("/foo/", "/foo/", { exact: true })).toEqual([true, {}])
+  })
 })
