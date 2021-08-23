@@ -10,7 +10,8 @@ import { Router } from "./Router"
 import { RouterContext } from "./RouterContext"
 import { RouterRegistryContext } from "./RouterRegistryContext"
 import { createTestHistory } from "./createTestHistory"
-import { Route } from "../route"
+import { Route, useRouteUnloader } from "../route"
+import { createTimeout } from "@corets/promise-helpers"
 
 describe("Router", () => {
   it("exposes a router handle trough the RouterContext", async () => {
@@ -199,6 +200,8 @@ describe("Router", () => {
     const Test = () => {
       const router = useContext(RouterContext)!
 
+      useRouteUnloader(() => createTimeout(10))
+
       return (
         <>
           {router.isUnloading() ? "unloading" : "unloaded"}
@@ -209,8 +212,10 @@ describe("Router", () => {
     }
 
     render(
-      <Router history={testHistory}>
-        <Test />
+      <Router history={testHistory} unloadable>
+        <Route>
+          <Test />
+        </Route>
       </Router>
     )
 

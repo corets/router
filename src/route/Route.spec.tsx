@@ -9,6 +9,7 @@ import { createTestHistory, Router } from "../router"
 import React, { useContext } from "react"
 import { Route } from "./Route"
 import { RouteContext } from "./RouteContext"
+import { createTimeout } from "@corets/promise-helpers"
 
 describe("Route", () => {
   it("renders an element from children", async () => {
@@ -266,10 +267,12 @@ describe("Route", () => {
     expect(await screen.findByText("redirect2")).toBeInTheDocument()
 
     fireEvent.click(screen.getByText("redirect1"))
+    await act(() => createTimeout(10))
 
     expect(testHistory.location.pathname).toBe("/foo/bar")
 
     fireEvent.click(screen.getByText("redirect2"))
+    await act(() => createTimeout(10))
 
     expect(testHistory.location.pathname).toBe("/bar")
   })

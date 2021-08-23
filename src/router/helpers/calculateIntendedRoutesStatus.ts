@@ -43,9 +43,10 @@ export const calculateIntendedRoutesStatus = (
       RouteStatus.Initialized,
       RouteStatus.Load,
       RouteStatus.Loaded,
-      RouteStatus.Visible,
     ].includes(currentStatus)
   ) {
+    return IntendedRouteStatus.Idle
+  } else if (currentStatus === RouteStatus.Visible) {
     return IntendedRouteStatus.Unload
   } else if (currentStatus === RouteStatus.Unload) {
     return IntendedRouteStatus.Unloading

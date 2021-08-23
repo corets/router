@@ -12,6 +12,7 @@ import { useAsync } from "@corets/use-async"
 import { useRouteUnloader } from "./useRouteUnloader"
 import { useRouteStatus } from "./useRouteStatus"
 import { RouteStatus } from "./types"
+import { useRouteIsVisible } from "./useRouteIsVisible"
 
 describe("useRouteUnloader", () => {
   it("uses an async route unloader", async () => {
@@ -19,25 +20,31 @@ describe("useRouteUnloader", () => {
     const testHistory = createTestHistory("/foo")
 
     const Test = () => {
+      const isVisible = useRouteIsVisible()
+
       const unloader = useRouteUnloader(() => promise)
 
       if (unloader.isRunning()) {
         return <div>unloading</div>
       }
 
-      return <div>foo</div>
+      if (isVisible) {
+        return <div>visible</div>
+      }
+
+      return null
     }
 
     render(
       <Router history={testHistory}>
-        <Route unloadable controlled path="/foo">
+        <Route unloadable path="/foo">
           <Test />
         </Route>
         <Route path="/bar">bar</Route>
       </Router>
     )
 
-    expect(await screen.findByText("foo")).toBeInTheDocument()
+    expect(await screen.findByText("visible")).toBeInTheDocument()
 
     act(() => testHistory.push("/bar"))
 
@@ -70,7 +77,11 @@ describe("useRouteUnloader", () => {
         return <div>unloading</div>
       }
 
-      return <div>foo</div>
+      if (status === RouteStatus.Visible) {
+        return <div>visible</div>
+      }
+
+      return null
     }
 
     render(
@@ -82,7 +93,7 @@ describe("useRouteUnloader", () => {
       </Router>
     )
 
-    expect(await screen.findByText("foo")).toBeInTheDocument()
+    expect(await screen.findByText("visible")).toBeInTheDocument()
 
     act(() => testHistory.push("/bar"))
 

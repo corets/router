@@ -215,11 +215,9 @@ export const Route = (
   ].includes(route.status as any)
 
   const showRoute =
-    renderRoute &&
     [RouteStatus.Visible, RouteStatus.Unload, RouteStatus.Unloaded].includes(
       route.status as any
-    ) &&
-    !lifeCycle.isLoading()
+    ) && !lifeCycle.isLoading()
 
   return (
     <RouteContext.Provider value={routeHandle}>

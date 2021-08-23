@@ -6,9 +6,11 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from "@testing-library/react"
-import { createTestHistory, Router } from "../router"
+import { createTestHistory, Router, useRouterIsVisible } from "../router"
 import { Route } from "./Route"
 import { createTimeout } from "@corets/promise-helpers"
+import { useRouteIsVisible } from "./useRouteIsVisible"
+import { useRouteUnloader } from "./useRouteUnloader"
 
 describe("useRouteIsUnloading", () => {
   it("tells if route is unloading", async () => {
@@ -16,8 +18,16 @@ describe("useRouteIsUnloading", () => {
 
     const Test = () => {
       const isUnloading = useRouteIsUnloading()
+      const isVisible = useRouteIsVisible()
 
-      return <>{isUnloading ? "yes" : "no"}</>
+      useRouteUnloader(() => createTimeout(10))
+
+      return (
+        <>
+          <div>{isUnloading ? "unloading" : "not unloading"}</div>
+          <div>{isVisible ? "visible" : "not visible"}</div>
+        </>
+      )
     }
 
     render(
@@ -32,15 +42,12 @@ describe("useRouteIsUnloading", () => {
     )
 
     expect(await screen.findByText("foo")).toBeInTheDocument()
-    expect(await screen.findByText("no")).toBeInTheDocument()
-
-    await act(() => createTimeout(10))
-
-    expect(await screen.findByText("no")).toBeInTheDocument()
+    expect(await screen.findByText("not unloading")).toBeInTheDocument()
+    expect(await screen.findByText("visible")).toBeInTheDocument()
 
     act(() => testHistory.push("/bar"))
 
-    expect(await screen.findByText("yes")).toBeInTheDocument()
+    expect(await screen.findByText("unloading")).toBeInTheDocument()
 
     await waitForElementToBeRemoved(() => screen.queryByText("foo"))
 
