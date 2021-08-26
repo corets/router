@@ -12,7 +12,18 @@
     "import": "./dist/esm/index.js"
   },
   "keywords": [
-    "corets"
+    "corets",
+    "react",
+    "router",
+    "react-router",
+    "preloading",
+    "preload",
+    "unloading",
+    "unload",
+    "prefetch",
+    "fetch",
+    "prerender",
+    "async"
   ],
   "files": [
     "/dist"

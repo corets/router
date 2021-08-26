@@ -127,10 +127,10 @@ export const Route = (
     if (route.status === RouteStatus.Load) {
       router.debug &&
         logRouteIsTryingToChangeStatus(route.path, RouteStatus.Load)
-      router.debug && logRouteIsWaitingForLoadersToRegister(route.path, wait)
 
       // give loaders some time to register
       if (wait > 0) {
+        router.debug && logRouteIsWaitingForLoadersToRegister(route.path, wait)
         await createTimeout(wait)
       }
 
@@ -143,10 +143,11 @@ export const Route = (
     if (route.status === RouteStatus.Unload) {
       router.debug &&
         logRouteIsTryingToChangeStatus(route.path, RouteStatus.Unload)
-      router.debug && logRouteIsWaitingForUnloadersToRegister(route.path, wait)
 
       // give unloaders some time to register
       if (wait > 0) {
+        router.debug &&
+          logRouteIsWaitingForUnloadersToRegister(route.path, wait)
         await createTimeout(wait)
       }
 
