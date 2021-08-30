@@ -32,6 +32,7 @@ import { Memo } from "@corets/memo"
 
 export type RouteProps = {
   path?: string
+  absolute?: boolean
   exact?: boolean
   wait?: number
   loadable?: boolean
@@ -56,6 +57,7 @@ export type RoutePropsWithLoader = RouteProps & {
 export const Route = (
   props: RoutePropsWithChildren | RoutePropsWithRenderer | RoutePropsWithLoader
 ) => {
+  const { render, load, absolute = false, children } = props as any
   const router = useRouter()
 
   if (!render && !load && !children) {
@@ -75,6 +77,7 @@ export const Route = (
     debug,
   } = useRouteRegistration({
     path: props.path ?? "/",
+    absolute,
     exact: props.exact ?? false,
     loadable: props.loadable,
     unloadable: props.unloadable,

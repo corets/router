@@ -61,6 +61,7 @@ export type UseRoute = <
 export type UseRouteRegistration = (args: {
   path: string
   exact: boolean
+  absolute: boolean
   loadable?: boolean
   unloadable?: boolean
   controlled?: boolean

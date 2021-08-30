@@ -292,4 +292,26 @@ describe("Route", () => {
     expect(await screen.findByText("content")).toBeInTheDocument()
     expect(screen.queryByText("disabled")).toBe(null)
   })
+
+  it("renders with absolute path", async () => {
+    render(
+      <Router history={createTestHistory("/foo/bar")}>
+        <Route path="/foo">
+          <div>foo</div>
+
+          <Route path="/foo/bar" absolute>
+            <div>bar</div>
+          </Route>
+
+          <Route path="/foo/bar">
+            <div>baz</div>
+          </Route>
+        </Route>
+      </Router>
+    )
+
+    expect(await screen.findByText("foo")).toBeInTheDocument()
+    expect(await screen.findByText("bar")).toBeInTheDocument()
+    expect(screen.queryByText("baz")).toBe(null)
+  })
 })

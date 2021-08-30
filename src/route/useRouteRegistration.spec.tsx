@@ -16,6 +16,7 @@ describe("useRouteRegistration", () => {
       registration = useRouteRegistration({
         path: "/foo",
         exact: true,
+        absolute: false,
         debug: false,
         disabled: false,
       })
@@ -31,6 +32,7 @@ describe("useRouteRegistration", () => {
       useRouteRegistration({
         path: "/bar",
         exact: true,
+        absolute: false,
         debug: false,
         disabled: false,
       })

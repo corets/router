@@ -32,6 +32,7 @@ export const useRouteRegistration: UseRouteRegistration = (
   const disabled = group?.disabled || args.disabled || false
   const wait = args.wait ?? group?.wait ?? router?.wait ?? 5
   const debug = args.debug ?? group?.debug ?? router?.debug ?? false
+  const parentPath = absolute ? router?.base : parentRoute?.path
 
   const routeId = useMemo(() => {
     return (routeIdCounter++).toString()
@@ -41,7 +42,7 @@ export const useRouteRegistration: UseRouteRegistration = (
     return {
       routeId,
       groupId,
-      path: createPathWithBase(args.path, parentRoute?.path),
+      path: createPathWithBase(args.path, parentPath),
       exact,
       status: RouteStatus.Idle,
       disabled,
