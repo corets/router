@@ -6,7 +6,7 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from "@testing-library/react"
-import { createTestHistory, Router, useRouterIsVisible } from "../router"
+import { createTestHistory, Router } from "../router"
 import { Route } from "./Route"
 import { createTimeout } from "@corets/promise-helpers"
 import { useRouteIsVisible } from "./useRouteIsVisible"
@@ -20,7 +20,7 @@ describe("useRouteIsUnloading", () => {
       const isUnloading = useRouteIsUnloading()
       const isVisible = useRouteIsVisible()
 
-      useRouteUnloader(() => createTimeout(10))
+      useRouteUnloader(() => createTimeout(100))
 
       return (
         <>

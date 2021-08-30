@@ -1,12 +1,7 @@
 import { useRouteLoader } from "./useRouteLoader"
 import { createPromise } from "@corets/promise-helpers"
 import React from "react"
-import {
-  act,
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from "@testing-library/react"
+import { act, render, screen } from "@testing-library/react"
 import { Router, useRouter } from "../router"
 import { Route } from "./Route"
 import { useAsync } from "@corets/use-async"

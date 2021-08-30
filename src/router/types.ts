@@ -35,3 +35,5 @@ export type UseRouterIsUnloading = () => boolean
 export type UseRouterIsVisible = () => boolean
 
 export type UsePathWithBase = (path: string, base?: string) => string
+
+export type UseRoutes = () => RouterRegistry
