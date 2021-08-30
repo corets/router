@@ -20,15 +20,15 @@ import {
   logRouteResolvedAllLoaders,
   logRouteResolvedAllUnloaders,
 } from "../logging"
-import { RouteGroupContext } from "./RouteGroupContext"
 import { createTimeout } from "@corets/promise-helpers"
 import { useRouteLifeCycleController } from "./useRouteLifeCycleController"
 import { useRouteRegistration } from "./useRouteRegistration"
 import { RouteContext } from "./RouteContext"
 import { RouteLifeCycleContext } from "./RouteLifeCycleContext"
 import { RouteHandle, RouteLoader, RouteRenderer, RouteStatus } from "./types"
-import { useRouter } from "../router"
+import { Group, useRouter } from "../router"
 import { useValue } from "@corets/use-value"
+import { Memo } from "@corets/memo"
 
 export type RouteProps = {
   path?: string
@@ -37,6 +37,7 @@ export type RouteProps = {
   loadable?: boolean
   unloadable?: boolean
   controlled?: boolean
+  disabled?: boolean
   debug?: boolean
 }
 
@@ -55,7 +56,6 @@ export type RoutePropsWithLoader = RouteProps & {
 export const Route = (
   props: RoutePropsWithChildren | RoutePropsWithRenderer | RoutePropsWithLoader
 ) => {
-  const { render, load, children } = props as any
   const router = useRouter()
 
   if (!render && !load && !children) {
@@ -64,16 +64,24 @@ export const Route = (
     )
   }
 
-  const debug = props?.debug ?? router.debug
-  const wait = props.wait ?? router.wait
-  const loadable = props.loadable ?? router.loadable
-  const unloadable = props.unloadable ?? router.unloadable
-  const controlled = props.controlled ?? router.controlled
-
-  const { route, reportStatus } = useRouteRegistration({
+  const {
+    route,
+    reportStatus,
+    loadable,
+    unloadable,
+    controlled,
+    disabled,
+    wait,
+    debug,
+  } = useRouteRegistration({
     path: props.path ?? "/",
     exact: props.exact ?? false,
-    debug,
+    loadable: props.loadable,
+    unloadable: props.unloadable,
+    controlled: props.controlled,
+    disabled: props.disabled,
+    wait: props.wait,
+    debug: props.debug,
   })
   const lifeCycle = useRouteLifeCycleController({
     path: route.path,
@@ -91,12 +99,16 @@ export const Route = (
     loadable,
     unloadable,
     controlled,
+    disabled,
     debug,
     isLoading: () =>
       [RouteStatus.Load, RouteStatus.Loaded].includes(route.status),
     isUnloading: () =>
-      [RouteStatus.Unload, RouteStatus.Unload].includes(route.status),
-    isVisible: () => route.status === RouteStatus.Visible,
+      [RouteStatus.Unload, RouteStatus.Unloaded].includes(route.status),
+    isVisible: () =>
+      [RouteStatus.Visible, RouteStatus.Unload, RouteStatus.Unloaded].includes(
+        route.status
+      ),
     redirect: router.redirect,
   }
 
@@ -221,34 +233,38 @@ export const Route = (
     ) && !lifeCycle.isLoading()
 
   return (
-    <RouteContext.Provider value={routeHandle}>
-      {renderRoute ? (
-        <>
-          {controlled ? (
-            <RouteGroupContext.Provider value={undefined}>
-              <RouteLifeCycleContext.Provider value={lifeCycle}>
+    <Memo deps={[JSON.stringify(routeHandle)]}>
+      <RouteContext.Provider value={routeHandle}>
+        {renderRoute ? (
+          <Group
+            groupId={null}
+            loadable={loadable}
+            unloadable={unloadable}
+            controlled={controlled}
+            disabled={disabled}
+            debug={debug}
+            wait={wait}
+          >
+            <RouteLifeCycleContext.Provider value={lifeCycle}>
+              {controlled ? (
                 <Component {...route.params} />
-              </RouteLifeCycleContext.Provider>
-            </RouteGroupContext.Provider>
-          ) : (
-            <div
-              className="corets-route"
-              style={{
-                width: "100%",
-                height: "100%",
-                display: showRoute ? "block" : "none",
-              }}
-            >
-              <RouteGroupContext.Provider value={undefined}>
-                <RouteLifeCycleContext.Provider value={lifeCycle}>
+              ) : (
+                <div
+                  className="corets-route"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    display: showRoute ? "block" : "none",
+                  }}
+                >
                   <Component {...route.params} />
-                </RouteLifeCycleContext.Provider>
-              </RouteGroupContext.Provider>
-            </div>
-          )}
-        </>
-      ) : null}
-    </RouteContext.Provider>
+                </div>
+              )}
+            </RouteLifeCycleContext.Provider>
+          </Group>
+        ) : null}
+      </RouteContext.Provider>
+    </Memo>
   )
 }
 

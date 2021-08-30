@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo } from "react"
-import { RouteGroupContext } from "../route/RouteGroupContext"
+import { Group } from "./Group"
 
 let routeGroupIdCounter = 0
 
@@ -9,12 +9,7 @@ export type SwitchProps = {
 
 export const Switch = (props: SwitchProps) => {
   const { children } = props
-
   const groupId = useMemo(() => (routeGroupIdCounter++).toString(), [])
 
-  return (
-    <RouteGroupContext.Provider value={groupId}>
-      {children}
-    </RouteGroupContext.Provider>
-  )
+  return <Group groupId={groupId}>{children}</Group>
 }

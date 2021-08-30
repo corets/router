@@ -49,6 +49,7 @@
     "react-dom": "^16.0.0 || ^17.0.0"
   },
   "dependencies": {
+    "@corets/memo": "^0.2.2",
     "@corets/promise-helpers": "^0.2.2",
     "@corets/use-async": "^0.2.0",
     "@corets/use-value": "^0.1.2",

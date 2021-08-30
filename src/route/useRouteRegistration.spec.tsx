@@ -17,6 +17,7 @@ describe("useRouteRegistration", () => {
         path: "/foo",
         exact: true,
         debug: false,
+        disabled: false,
       })
 
       return (
@@ -31,6 +32,7 @@ describe("useRouteRegistration", () => {
         path: "/bar",
         exact: true,
         debug: false,
+        disabled: false,
       })
 
       return null
@@ -50,6 +52,7 @@ describe("useRouteRegistration", () => {
       groupId: undefined,
       routeId: "0",
       status: RouteStatus.Idle,
+      disabled: false,
     } as RouteState)
     expect(Object.values(registry.get())[1]).toEqual({
       path: "/foo/bar",
@@ -57,6 +60,7 @@ describe("useRouteRegistration", () => {
       groupId: undefined,
       routeId: "1",
       status: RouteStatus.Idle,
+      disabled: false,
     } as RouteState)
     expect(registration!.route).toEqual({
       path: "/foo",
@@ -64,6 +68,7 @@ describe("useRouteRegistration", () => {
       groupId: undefined,
       routeId: "0",
       status: RouteStatus.Idle,
+      disabled: false,
     } as RouteState)
 
     act(() => registration.reportStatus(RouteStatus.Visible))
@@ -74,6 +79,7 @@ describe("useRouteRegistration", () => {
       groupId: undefined,
       routeId: "0",
       status: RouteStatus.Visible,
+      disabled: false,
     } as RouteState)
 
     act(() => result.unmount())

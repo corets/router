@@ -15,6 +15,7 @@ export type RouterHandle = {
   loadable: boolean
   unloadable: boolean
   controlled: boolean
+  getRoutes(): RouterRegistry
   redirect(to: string, options?: { base?: string }): void
   isLoading(): boolean
   isUnloading(): boolean

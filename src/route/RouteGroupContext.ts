@@ -1,3 +1,6 @@
 import { createContext } from "react"
+import { RouteGroupHandle } from "./types"
 
-export const RouteGroupContext = createContext<string | undefined>(undefined)
+export const RouteGroupContext = createContext<RouteGroupHandle | undefined>(
+  undefined
+)

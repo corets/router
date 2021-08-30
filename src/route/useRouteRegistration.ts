@@ -10,16 +10,28 @@ import {
 import { useRouterRegistry } from "../router/useRouterRegistry"
 import { RouteContext } from "./RouteContext"
 import { createPathWithBase } from "../matcher"
+import { RouterContext } from "../router"
 
 let routeIdCounter = 0
 
 export const useRouteRegistration: UseRouteRegistration = (
   args
 ): RouteRegistration => {
-  const { exact, debug } = args
+  const { exact, absolute } = args
   const registry = useRouterRegistry()
-  const groupId = useContext(RouteGroupContext)
+  const group = useContext(RouteGroupContext)
   const parentRoute = useContext(RouteContext)
+  const router = useContext(RouterContext)
+
+  const groupId = group?.groupId
+  const loadable = args.loadable ?? group?.loadable ?? router?.loadable ?? false
+  const unloadable =
+    args.unloadable ?? group?.unloadable ?? router?.unloadable ?? false
+  const controlled =
+    args.controlled ?? group?.controlled ?? router?.controlled ?? false
+  const disabled = group?.disabled || args.disabled || false
+  const wait = args.wait ?? group?.wait ?? router?.wait ?? 5
+  const debug = args.debug ?? group?.debug ?? router?.debug ?? false
 
   const routeId = useMemo(() => {
     return (routeIdCounter++).toString()
@@ -32,10 +44,11 @@ export const useRouteRegistration: UseRouteRegistration = (
       path: createPathWithBase(args.path, parentRoute?.path),
       exact,
       status: RouteStatus.Idle,
+      disabled,
     }
   }, [routeId])
 
-  const route = {
+  const route: RouteState = {
     ...initialRoute,
     ...registry.get()?.[routeId],
   }
@@ -51,6 +64,15 @@ export const useRouteRegistration: UseRouteRegistration = (
       },
     })
   }
+
+  useEffect(() => {
+    if (route.disabled !== disabled) {
+      registry.set({
+        ...registry.get(),
+        [routeId]: { ...route, disabled },
+      })
+    }
+  }, [disabled])
 
   useEffect(() => {
     registry.set({
@@ -69,6 +91,12 @@ export const useRouteRegistration: UseRouteRegistration = (
 
   const registration: RouteRegistration = {
     route,
+    loadable,
+    unloadable,
+    controlled,
+    disabled,
+    wait,
+    debug,
     reportStatus,
   }
 

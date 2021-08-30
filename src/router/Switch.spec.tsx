@@ -3,6 +3,7 @@ import React from "react"
 import { Router } from "./Router"
 import { Route } from "../route"
 import { Switch } from "./Switch"
+import { Group } from "./Group"
 
 describe("Switch", () => {
   it("renders one of the routes", async () => {
@@ -41,5 +42,28 @@ describe("Switch", () => {
     expect(await screen.findByText("switch13")).toBeInTheDocument()
     expect(screen.queryByText("switch12")).toBe(null)
     expect(screen.queryByText("switch2")).toBe(null)
+  })
+
+  it("does not render disabled routes", async () => {
+    render(
+      <Router>
+        <Switch>
+          <Route>foo</Route>
+        </Switch>
+
+        <Group disabled>
+          <Switch>
+            <Route>bar</Route>
+
+            <Group>
+              <Route>bar</Route>
+            </Group>
+          </Switch>
+        </Group>
+      </Router>
+    )
+
+    expect(await screen.findByText("foo")).toBeInTheDocument()
+    expect(screen.queryByText("bar")).toBe(null)
   })
 })

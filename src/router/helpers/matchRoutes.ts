@@ -25,7 +25,7 @@ export const matchRoutes = (args: {
           exact: route?.exact,
         })
 
-        if (matches) {
+        if (matches && !route.disabled) {
           const query = queryParser(location.search)
 
           updatedRoutes[routeId] = {
@@ -35,12 +35,12 @@ export const matchRoutes = (args: {
             query,
             location,
           }
+
+          if (route.groupId) {
+            groupsWithActiveRoutes.push(route.groupId)
+          }
         } else {
           updatedRoutes[routeId] = { ...route, matches: false }
-        }
-
-        if (route.groupId && matches) {
-          groupsWithActiveRoutes.push(route.groupId)
         }
       }
 

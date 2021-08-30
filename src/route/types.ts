@@ -25,6 +25,7 @@ export type RouteState<
   groupId?: string
   path: string
   exact: boolean
+  disabled?: boolean
   status: RouteStatus
   location?: Location
   matches?: boolean
@@ -44,6 +45,7 @@ export type RouteHandle<
   loadable: boolean
   unloadable: boolean
   controlled: boolean
+  disabled: boolean
   debug: boolean
   isLoading(): boolean
   isUnloading(): boolean
@@ -59,12 +61,33 @@ export type UseRoute = <
 export type UseRouteRegistration = (args: {
   path: string
   exact: boolean
-  debug: boolean
+  loadable?: boolean
+  unloadable?: boolean
+  controlled?: boolean
+  disabled?: boolean
+  debug?: boolean
+  wait?: number
 }) => RouteRegistration
 
 export type RouteRegistration = {
   route: RouteState
+  loadable: boolean
+  unloadable: boolean
+  controlled: boolean
+  disabled: boolean
+  debug: boolean
+  wait: number
   reportStatus(status: RouteStatus): void
+}
+
+export type RouteGroupHandle = {
+  groupId?: string
+  loadable?: boolean
+  unloadable?: boolean
+  controlled?: boolean
+  disabled?: boolean
+  debug?: boolean
+  wait?: number
 }
 
 export type UseRouteStatus = () => RouteStatus

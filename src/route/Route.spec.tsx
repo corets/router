@@ -276,4 +276,20 @@ describe("Route", () => {
 
     expect(testHistory.location.pathname).toBe("/bar")
   })
+
+  it("does not match disabled routes", async () => {
+    render(
+      <Router>
+        <Route disabled>
+          <div>disabled</div>
+        </Route>
+        <Route>
+          <div>content</div>
+        </Route>
+      </Router>
+    )
+
+    expect(await screen.findByText("content")).toBeInTheDocument()
+    expect(screen.queryByText("disabled")).toBe(null)
+  })
 })
