@@ -86,6 +86,10 @@ export const Router = (props: RouterProps) => {
     )
   }
 
+  const getRoutes = () => {
+    return registry.get()
+  }
+
   const router: RouterHandle = {
     base,
     debug,
@@ -101,6 +105,7 @@ export const Router = (props: RouterProps) => {
     isLoading,
     isUnloading,
     isVisible,
+    getRoutes,
   }
 
   useEffect(() => {
