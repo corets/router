@@ -1,6 +1,7 @@
 export * from "./types"
 export * from "./createQueryParser"
 export * from "./createQueryStringifier"
+export * from "./createRedirect"
 export * from "./useHistory"
 export * from "./useLocation"
 export * from "./useMatch"

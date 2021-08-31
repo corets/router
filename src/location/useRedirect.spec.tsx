@@ -27,6 +27,33 @@ describe("useRedirect", () => {
     expect(testHistory.location.pathname).toBe("/foo")
   })
 
+  it("redirects with query", async () => {
+    const testHistory = createTestHistory("/")
+
+    const Test = () => {
+      const redirect = useRedirect()
+
+      return (
+        <button onClick={() => redirect("/foo", { query: { bar: "baz" } })}>
+          button
+        </button>
+      )
+    }
+
+    render(
+      <Router history={testHistory}>
+        <Test />
+      </Router>
+    )
+
+    expect(testHistory.location.pathname).toBe("/")
+
+    fireEvent.click(screen.getByText("button"))
+
+    expect(testHistory.location.pathname).toBe("/foo")
+    expect(testHistory.location.search).toBe("?bar=baz")
+  })
+
   it("respects base path", async () => {
     const testHistory = createTestHistory("/")
 

@@ -12,11 +12,18 @@ export type UseHistory = (history?: History) => History
 
 export type UseRedirect = (
   history?: History,
-  options?: {
-    base?: string
-    queryParser?: QueryParser
-    queryStringifier?: QueryStringifier
-  }
+  options?: CreateRedirectHandleOptions
+) => RedirectHandle
+
+export type CreateRedirectHandleOptions = {
+  base?: string
+  queryParser?: QueryParser
+  queryStringifier?: QueryStringifier
+}
+
+export type CreateRedirectHandle = (
+  history: History,
+  options?: CreateRedirectHandleOptions
 ) => RedirectHandle
 
 export type RedirectHandle = (
