@@ -38,6 +38,7 @@ export type RouteProps = {
   loadable?: boolean
   unloadable?: boolean
   controlled?: boolean
+  enabled?: boolean
   disabled?: boolean
   debug?: boolean
 }
@@ -82,7 +83,7 @@ export const Route = (
     loadable: props.loadable,
     unloadable: props.unloadable,
     controlled: props.controlled,
-    disabled: props.disabled,
+    disabled: props.disabled === true || props.enabled === false,
     wait: props.wait,
     debug: props.debug,
   })

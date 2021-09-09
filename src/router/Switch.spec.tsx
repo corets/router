@@ -51,15 +51,26 @@ describe("Switch", () => {
           <Route>foo</Route>
         </Switch>
 
-        <Group disabled>
-          <Switch>
-            <Route>bar</Route>
+        <Switch disabled>
+          <Route>bar</Route>
+        </Switch>
+      </Router>
+    )
 
-            <Group>
-              <Route>bar</Route>
-            </Group>
-          </Switch>
-        </Group>
+    expect(await screen.findByText("foo")).toBeInTheDocument()
+    expect(screen.queryByText("bar")).toBe(null)
+  })
+
+  it("does not render disabled routes", async () => {
+    render(
+      <Router>
+        <Switch>
+          <Route>foo</Route>
+        </Switch>
+
+        <Switch enabled={false}>
+          <Route>bar</Route>
+        </Switch>
       </Router>
     )
 

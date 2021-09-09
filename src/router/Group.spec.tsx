@@ -36,6 +36,22 @@ describe("Group", () => {
     expect(screen.queryByText("bar")).toBe(null)
   })
 
+  it("does not render disabled routes", async () => {
+    render(
+      <Router>
+        <Group>
+          <Route>foo</Route>
+        </Group>
+        <Group enabled={false}>
+          <Route>bar</Route>
+        </Group>
+      </Router>
+    )
+
+    expect(await screen.findByText("foo")).toBeInTheDocument()
+    expect(screen.queryByText("bar")).toBe(null)
+  })
+
   it("can be used to disable routes inside a Switch", async () => {
     render(
       <Router>

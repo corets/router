@@ -6,6 +6,7 @@ export type GroupProps = {
   unloadable?: boolean
   controlled?: boolean
   disabled?: boolean
+  enabled?: boolean
   debug?: boolean
   wait?: number
   groupId?: string | null
@@ -19,7 +20,8 @@ export const Group = (props: GroupProps) => {
 
   const groupId =
     props.groupId === null ? undefined : props.groupId ?? group?.groupId
-  const disabled = group?.disabled || props.disabled
+  const disabled =
+    group?.disabled || props.disabled === true || props.enabled === false
   const loadable = props.loadable ?? group?.loadable
   const unloadable = props.unloadable ?? group?.unloadable
   const controlled = props.controlled ?? group?.controlled

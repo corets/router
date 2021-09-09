@@ -293,6 +293,22 @@ describe("Route", () => {
     expect(screen.queryByText("disabled")).toBe(null)
   })
 
+  it("does not match disabled routes", async () => {
+    render(
+      <Router>
+        <Route enabled={false}>
+          <div>disabled</div>
+        </Route>
+        <Route>
+          <div>content</div>
+        </Route>
+      </Router>
+    )
+
+    expect(await screen.findByText("content")).toBeInTheDocument()
+    expect(screen.queryByText("disabled")).toBe(null)
+  })
+
   it("renders with absolute path", async () => {
     render(
       <Router history={createTestHistory("/foo/bar")}>
