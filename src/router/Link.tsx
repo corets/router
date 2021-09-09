@@ -38,9 +38,8 @@ export const Link = forwardRef((props: LinkProps, ref) => {
 
   return (
     <a
-      {...otherProps}
+      {...{ ...otherProps, ...(matches ? { "data-active": "true" } : {}) }}
       ref={ref as any}
-      data-active={matches}
       href={href}
       onClick={(e) => handleClick(e)}
     />
