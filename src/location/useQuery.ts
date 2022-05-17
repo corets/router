@@ -1,9 +1,9 @@
-import { useContext, useMemo } from "react"
+import { useContext, useMemo, useRef } from "react"
 import { useLocation } from "./useLocation"
 import { useHistory } from "./useHistory"
 import { useQueryParser } from "./useQueryParser"
 import { useQueryStringifier } from "./useQueryStringifier"
-import { ParsedQuery, UseQuery } from "./types"
+import { ParsedQuery, UseQuery, QueryHandle } from "./types"
 import { RouteContext } from "../route"
 
 const DEFAULT_STRIP_LIST = [
@@ -70,12 +70,18 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
     history.push({ search: `?${queryString}` })
   }
 
-  return {
-    get: () => query,
-    set: (newQuery: Partial<ParsedQuery>) => updateQuery(newQuery),
-    put: (newQuery: Partial<ParsedQuery>) =>
-      updateQuery({ ...query, ...newQuery }),
-  }
+  const refs = useRef<QueryHandle<any>>({
+    get: () => null,
+    set: () => null,
+    put: () => null,
+  })
+
+  refs.current.get = () => query
+  refs.current.set = (newQuery: Partial<ParsedQuery>) => updateQuery(newQuery)
+  refs.current.put = (newQuery: Partial<ParsedQuery>) =>
+    updateQuery({ ...query, ...newQuery })
+
+  return refs.current
 }
 
 const pickRelevantQueryParts = (
