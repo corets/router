@@ -44,7 +44,7 @@ export type UseParams = <
   defaultParams?: TDefaultParams
 ) => TParams
 
-export type ParsedQuery = Record<string, string | string[] | null>
+export type ParsedQuery = Record<string, string | null | (string | null)[]>
 
 export type CreateQueryParser = () => QueryParser
 
