@@ -114,24 +114,25 @@ describe("useQuery", () => {
 
   it("synchs changes synchronously", async () => {
     const testHistory = createTestHistory("/", {
-      foo: "bar",
+      foo: "foo",
       baz: "yolo",
     })
 
     const Test = () => {
-      const query = useQuery({ foo: "foo" })
-      const resultRef = useRef<any>()
+      const query = useQuery({ foo: "null" })
+      const resultRef = useRef<any>(query.get())
 
-      useEffect(() => {
-        new Promise<void>((resolve) => {
-          query.put({ foo: "bar" })
-          resultRef.current = query.get()
+      const handleClick = () => {
+        query.put({ foo: "bar" })
+        resultRef.current = query.get()
+      }
 
-          resolve()
-        })
-      }, [])
-
-      return <>{JSON.stringify(resultRef.current)}</>
+      return (
+        <>
+          <button onClick={handleClick}>button</button>
+          <div>{JSON.stringify(resultRef.current)}</div>
+        </>
+      )
     }
 
     render(
@@ -139,6 +140,10 @@ describe("useQuery", () => {
         <Test />
       </Router>
     )
+
+    expect(await screen.findByText(`{"foo":"foo"}`)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText("button"))
 
     expect(await screen.findByText(`{"foo":"bar"}`)).toBeInTheDocument()
   })

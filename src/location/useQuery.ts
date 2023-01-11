@@ -24,11 +24,10 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
   const queryStringifier = useQueryStringifier(options?.queryStringifier)
   const strip = [...(options?.strip ?? DEFAULT_STRIP_LIST), null]
   const history = useHistory(options?.history)
-  const location = useLocation(history)
   const queryRef = useRef<any>()
 
   const parseQuery = () => {
-    const globalQuery = queryParser(location.search)
+    const globalQuery = queryParser(history.location.search)
     const routeQuery = {
       // apply global query state
       ...globalQuery,
@@ -55,12 +54,12 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
     queryRef.current = parseQuery()
   }, [
     JSON.stringify(defaultQuery),
-    JSON.stringify(location.search),
+    JSON.stringify(history.location.search),
     JSON.stringify(route?.query),
   ])
 
   const updateQuery = (newQuery: Partial<ParsedQuery>) => {
-    const globalQuery = queryParser(location.search)
+    const globalQuery = queryParser(history.location.search)
     const finalQuery = {
       // do not touch values that are not tracked
       ...pickIrrelevantQueryParts(defaultQuery, globalQuery),
@@ -70,9 +69,8 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
     }
     const queryString = queryStringifier(finalQuery)
 
-    queryRef.current = parseQuery()
-
     history.push({ search: `?${queryString}` })
+    queryRef.current = parseQuery()
   }
 
   const refs = useRef<QueryHandle<any>>({
