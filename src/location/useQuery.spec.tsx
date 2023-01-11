@@ -122,14 +122,20 @@ describe("useQuery", () => {
       const query = useQuery({ foo: "null" })
       const resultRef = useRef<any>(query.get())
 
-      const handleClick = () => {
+      const handleClick1 = () => {
         query.put({ foo: "bar" })
+        resultRef.current = query.get()
+      }
+
+      const handleClick2 = () => {
+        query.put({ foo: "baz" })
         resultRef.current = query.get()
       }
 
       return (
         <>
-          <button onClick={handleClick}>button</button>
+          <button onClick={handleClick1}>button1</button>
+          <button onClick={handleClick2}>button2</button>
           <div>{JSON.stringify(resultRef.current)}</div>
         </>
       )
@@ -143,8 +149,12 @@ describe("useQuery", () => {
 
     expect(await screen.findByText(`{"foo":"foo"}`)).toBeInTheDocument()
 
-    fireEvent.click(screen.getByText("button"))
+    fireEvent.click(screen.getByText("button1"))
 
     expect(await screen.findByText(`{"foo":"bar"}`)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText("button2"))
+
+    expect(await screen.findByText(`{"foo":"baz"}`)).toBeInTheDocument()
   })
 })

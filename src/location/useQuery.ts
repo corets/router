@@ -1,5 +1,4 @@
 import { useContext, useMemo, useRef } from "react"
-import { useLocation } from "./useLocation"
 import { useHistory } from "./useHistory"
 import { useQueryParser } from "./useQueryParser"
 import { useQueryStringifier } from "./useQueryStringifier"
@@ -26,8 +25,9 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
   const history = useHistory(options?.history)
   const queryRef = useRef<any>()
 
-  const parseQuery = () => {
+  const parseQuery = (newQuery?: Partial<ParsedQuery>) => {
     const globalQuery = queryParser(history.location.search)
+
     const routeQuery = {
       // apply global query state
       ...globalQuery,
@@ -35,6 +35,8 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
       // inside views that are being unloaded, only happens if there
       // is actually a route available
       ...route?.query,
+      // propagate query changes that have been made explicitly
+      ...(newQuery ?? ({} as any)),
     }
 
     const finalQuery = {
@@ -70,7 +72,7 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
     const queryString = queryStringifier(finalQuery)
 
     history.push({ search: `?${queryString}` })
-    queryRef.current = parseQuery()
+    queryRef.current = parseQuery(newQuery)
   }
 
   const refs = useRef<QueryHandle<any>>({

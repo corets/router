@@ -9,7 +9,6 @@ import {
   QueryParser,
   QueryStringifier,
   useHistory,
-  useLocation,
   useRedirect,
 } from "../location"
 import { matchRoutes } from "./helpers/matchRoutes"
@@ -44,7 +43,6 @@ export const Router = (props: RouterProps) => {
     controlled = false,
   } = props
   const history = useHistory(props.history)
-  const location = useLocation(history)
   const redirect = useRedirect(history, { base })
 
   const registry = useValue<RouterRegistry>({})
@@ -109,8 +107,8 @@ export const Router = (props: RouterProps) => {
   }
 
   useEffect(() => {
-    debug && logRouterLocationChanged(location.pathname)
-  }, [location.pathname])
+    debug && logRouterLocationChanged(history.location.pathname)
+  }, [history.location.pathname])
 
   useEffect(() => {
     registry.set(
@@ -119,10 +117,10 @@ export const Router = (props: RouterProps) => {
         base,
         pathMatcher,
         queryParser,
-        location,
+        location: history.location,
       })
     )
-  }, [JSON.stringify(location), JSON.stringify(registry.get())])
+  }, [JSON.stringify(history.location), JSON.stringify(registry.get())])
 
   useEffect(() => {
     registry.set(orchestrateRouteTransitions(registry.get(), debug))
