@@ -25,17 +25,15 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
   const strip = [...(options?.strip ?? DEFAULT_STRIP_LIST), null]
   const history = useHistory(options?.history)
   const location = useLocation(history)
+  const queryRef = useRef<any>()
 
-  const globalQuery = useMemo(() => queryParser(location.search), [
-    location.search,
-  ])
-
-  const query = useMemo(() => {
+  const parseQuery = () => {
+    const globalQuery = queryParser(location.search)
     const routeQuery = {
       // apply global query state
       ...globalQuery,
       // apply route query to prevent leaking if query changes
-      // into views that are being unloaded, only happens if there
+      // inside views that are being unloaded, only happens if there
       // is actually a route available
       ...route?.query,
     }
@@ -51,13 +49,18 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
     }
 
     return finalQuery
+  }
+
+  useMemo(() => {
+    queryRef.current = parseQuery()
   }, [
     JSON.stringify(defaultQuery),
-    JSON.stringify(globalQuery),
+    JSON.stringify(location.search),
     JSON.stringify(route?.query),
   ])
 
   const updateQuery = (newQuery: Partial<ParsedQuery>) => {
+    const globalQuery = queryParser(location.search)
     const finalQuery = {
       // do not touch values that are not tracked
       ...pickIrrelevantQueryParts(defaultQuery, globalQuery),
@@ -66,6 +69,8 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
       ...stripIgnoredValues({ ...(newQuery as any) }, strip),
     }
     const queryString = queryStringifier(finalQuery)
+
+    queryRef.current = parseQuery()
 
     history.push({ search: `?${queryString}` })
   }
@@ -76,10 +81,10 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
     put: () => null,
   })
 
-  refs.current.get = () => query
+  refs.current.get = () => queryRef.current
   refs.current.set = (newQuery: Partial<ParsedQuery>) => updateQuery(newQuery)
   refs.current.put = (newQuery: Partial<ParsedQuery>) =>
-    updateQuery({ ...query, ...newQuery })
+    updateQuery({ ...queryRef.current, ...newQuery })
 
   return refs.current
 }

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { createTestHistory } from "../router/createTestHistory"
 import { useQuery } from "./useQuery"
 import { fireEvent, render, screen } from "@testing-library/react"
@@ -110,5 +110,36 @@ describe("useQuery", () => {
         baz: "yolo",
       })}`
     )
+  })
+
+  it("synchs changes synchronously", async () => {
+    const testHistory = createTestHistory("/", {
+      foo: "bar",
+      baz: "yolo",
+    })
+
+    const Test = () => {
+      const query = useQuery({ foo: "foo" })
+      const resultRef = useRef<any>()
+
+      useEffect(() => {
+        new Promise<void>((resolve) => {
+          query.put({ foo: "bar" })
+          resultRef.current = query.get()
+
+          resolve()
+        })
+      }, [])
+
+      return <>{JSON.stringify(resultRef.current)}</>
+    }
+
+    render(
+      <Router history={testHistory}>
+        <Test />
+      </Router>
+    )
+
+    expect(await screen.findByText(`{"foo":"bar"}`)).toBeInTheDocument()
   })
 })
