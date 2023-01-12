@@ -31,12 +31,12 @@ export const useQuery: UseQuery = (defaultQuery, options) => {
     const routeQuery = {
       // apply global query state
       ...globalQuery,
+      // propagate query changes that have been made explicitly
+      // or
       // apply route query to prevent leaking if query changes
       // inside views that are being unloaded, only happens if there
       // is actually a route available
-      ...route?.query,
-      // propagate query changes that have been made explicitly
-      ...(newQuery ?? ({} as any)),
+      ...(!!newQuery ? (newQuery as any) : route?.query),
     }
 
     const finalQuery = {
