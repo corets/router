@@ -1,8 +1,8 @@
 import { useRouteLoader } from "./useRouteLoader"
-import { createPromise } from "@corets/promise-helpers"
-import React from "react"
+import { createPromise, createTimeout } from "@corets/promise-helpers"
+import React, { useState } from "react"
 import { act, render, screen } from "@testing-library/react"
-import { Router, useRouter } from "../router"
+import { Router, useRouter, createTestHistory } from "../router"
 import { Route } from "./Route"
 import { useAsync } from "@corets/use-async"
 
@@ -33,6 +33,61 @@ describe("useRouteLoader", () => {
     act(() => promise.resolve())
 
     expect(await screen.findByText("done")).toBeInTheDocument()
+  })
+
+  it("uses an async route loader with an unloader", async () => {
+    const testHistory = createTestHistory("/foo")
+    const loaderPromise = createPromise()
+    const unloaderPromise = createPromise()
+
+    const Test = () => {
+      const [isUnloading, setIsUnloading] = useState(false)
+
+      const loader = useRouteLoader(async () => {
+        await loaderPromise
+
+        return async () => {
+          setIsUnloading(true)
+
+          await unloaderPromise
+
+          setIsUnloading(false)
+        }
+      })
+
+      if (loader.isRunning()) {
+        return <div>loading</div>
+      }
+
+      if (isUnloading) {
+        return <div>unloading</div>
+      }
+
+      return <div>done</div>
+    }
+
+    render(
+      <Router history={testHistory}>
+        <Route loadable unloadable controlled path="/foo">
+          <Test />
+        </Route>
+        <Route path="/bar">bar</Route>
+      </Router>
+    )
+
+    expect(await screen.findByText("loading")).toBeInTheDocument()
+
+    act(() => loaderPromise.resolve())
+
+    expect(await screen.findByText("done")).toBeInTheDocument()
+
+    act(() => testHistory.push("/bar"))
+
+    expect(await screen.findByText("unloading")).toBeInTheDocument()
+
+    act(() => unloaderPromise.resolve())
+
+    expect(await screen.findByText("bar")).toBeInTheDocument()
   })
 
   it("uses a controlled route loader", async () => {

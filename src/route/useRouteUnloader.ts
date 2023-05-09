@@ -10,7 +10,7 @@ export const useRouteUnloader: UseRouteUnloader = (callback) => {
   const unloader = useMemo(() => lifeCycle.createUnloader(), [])
 
   useEffect(() => {
-    if (!route.unloadable) {
+    if (!route.unloadable && !route.loadable) {
       console.warn(
         `[Router]: route ${route.path} is trying to use an unloader, but either the route itself nor the router have this feature enabled. You have to set the unloadable flag, for example: <Route unloadable /> or the <Router unloadable />, to enable this feature.`
       )

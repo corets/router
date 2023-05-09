@@ -127,7 +127,11 @@ export type RouteLifeCycleUnloaderHandle = {
 export type UseRouteLifeCycle = () => RouteLifeCycleHandle
 
 export type UseRouteLoader = (
-  loader?: () => Promise<void> | void
+  loader?: () =>
+    | void
+    | Promise<void>
+    | Promise<() => void>
+    | Promise<() => Promise<void>>
 ) => {
   done(): void
   isRunning(): boolean
