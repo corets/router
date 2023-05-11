@@ -126,12 +126,16 @@ export type RouteLifeCycleUnloaderHandle = {
 
 export type UseRouteLifeCycle = () => RouteLifeCycleHandle
 
+export type RouteLoaderCallback = () =>
+  | void
+  | RouteUnloaderCallback
+  | Promise<void>
+  | Promise<RouteUnloaderCallback>
+
+export type RouteUnloaderCallback = (() => void) | (() => Promise<void>)
+
 export type UseRouteLoader = (
-  loader?: () =>
-    | void
-    | Promise<void>
-    | Promise<() => void>
-    | Promise<() => Promise<void>>
+  loader?: RouteLoaderCallback
 ) => {
   done(): void
   isRunning(): boolean

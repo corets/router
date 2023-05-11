@@ -2,16 +2,22 @@ import { useAsync } from "@corets/use-async"
 import { useRouteLifeCycle } from "./useRouteLifeCycle"
 import { useEffect, useMemo, useRef } from "react"
 import { useRoute } from "./useRoute"
-import { RouteStatus, UseRouteLoader } from "./types"
+import {
+  RouteStatus,
+  UseRouteLoader,
+  RouteLoaderCallback,
+  RouteUnloaderCallback,
+} from "./types"
 import { useRouteUnloader } from "./useRouteUnloader"
 
 export const useRouteLoader: UseRouteLoader = (callback) => {
   const route = useRoute()
   const lifeCycle = useRouteLifeCycle()
   const loader = useMemo(() => lifeCycle.createLoader(), [])
-  const maybeUnloaderCallbackRef = useRef<
-    (() => void) | (() => Promise<void>) | void
-  >()
+  const callbackRef = useRef<RouteLoaderCallback | undefined>()
+  const maybeUnloaderCallbackRef = useRef<RouteUnloaderCallback | void>()
+
+  callbackRef.current = callback
 
   useEffect(() => {
     if (!route.loadable) {
@@ -33,8 +39,8 @@ export const useRouteLoader: UseRouteLoader = (callback) => {
     if (route.status === RouteStatus.Load && !loader.isRunning()) {
       loader.start()
 
-      if (callback) {
-        maybeUnloaderCallbackRef.current = await callback()
+      if (callbackRef.current) {
+        maybeUnloaderCallbackRef.current = await callbackRef.current()
 
         loader.stop()
       }
